@@ -1,4 +1,5 @@
 require "application_system_test_case"
+require "modules/empfin_request_form"
 
 class ServiceNowsTest < ApplicationSystemTestCase
   # test "visiting the index" do
@@ -20,17 +21,36 @@ class ServiceNowsTest < ApplicationSystemTestCase
     binding.pry
   end
 
-  EMPFIN_REQUEST_URL = 'https://nd.service-now.com/nav_to.do?uri=%2Fcom.glideapp.servicecatalog_cat_item_view.do%3Fv%3D1%26sysparm_id%3D9f4426e6db403200de73f5161d96198d'
-  USERNAME_PASSWORD_BASE64 = ENV.fetch('USERNAME_PASSWORD_BASE64')
-  USERNAME_PASSWORD = Base64.decode64(USERNAME_PASSWORD_BASE64)
-  USERNAME = USERNAME_PASSWORD.split(':')[0]
-  PASSWORD = USERNAME_PASSWORD.split(':')[1]
 
   test 'something' do
+    EmpfinRequestForm::Login.new(context: self)
 
-    visit 'https://sn.nd.edu'
-    interactive_debug_session
+    ifr = find('main iframe#gsft_main', wait: 10)
+    within_frame(ifr) do
+      find('#item_table')
+      find('table td.guide_tray', text: 'Customer Care Request')
+      group_entry = find('input[id="sys_display.IO:4e621036db043200de73f5161d96196b"]')
+      describe_what_work = find('textarea[id="IO:96252ee6db403200de73f5161d9619c4"]')
+      assign_user = find('input[id="sys_display.IO:e756cc171b3df7009a56ea866e4bcb49"]')
 
+      describe_what_work.set(
+        'KB - This is a Test - Test of long text description - Please perform the following steps (test) Test - KB - TEST ONLY'
+      )
+      group_entry.set(
+        'Employee Finance Solutions'
+      )
+      assign_user.set(
+        'Kingdon Barrett'
+      )
+      order_now = find('button#oi_order_now_button')
+      #KB pending - do not automate this until we have consensus
+      # order_now.click
+      binding.pry
+      find('span', text: 'Thank you, your request has been submitted')
+      request_no = find('a#requesturl').text
 
+    end
+
+    # interactive_debug_session
   end
 end
