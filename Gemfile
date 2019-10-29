@@ -7,6 +7,8 @@ ruby '2.6.5'
 # gem 'launchy'
 # Pry for interactive debugging
 gem 'pry-rails'
+# manage secrets with dotenv
+gem 'dotenv'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.0'
