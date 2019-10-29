@@ -36,30 +36,41 @@ module EmpfinRequestForm
     end
 
     def fill_out(work:, group:, user:)
-      describe_what_work.value(work)
-      group_entry.value(group)
-      assign_user.value(user)
+      describe_what_work(work)
+      group_entry(group)
+      assign_user(user)
     end
 
     def submit
-      order_now = ctx.find('button#oi_order_now_button')
-      #KB pending - do not automate this until we have consensus
-      # order_now.click
-      binding.pry
-      ctx.find('span',
-               text: 'Thank you, your request has been submitted')
-      request_link = ctx.find('a#requesturl')
-      request_no = request_link.text
+      request_no = nil
+      ctx.within_frame(iframe) do
+        order_now = ctx.find('button#oi_order_now_button')
+        #KB pending - do not automate this until we have consensus
+        # order_now.click
+        binding.pry
+        ctx.find('span',
+                 text: 'Thank you, your request has been submitted')
+        request_link = ctx.find('a#requesturl')
+        request_no = request_link.text
+      end
+
+      return request_no
     end
 
-    def describe_what_work
-      ctx.find(DESCRIBE_WHAT_WORK)
+    def describe_what_work(val)
+      ctx.within_frame(iframe) do
+        ctx.find(DESCRIBE_WHAT_WORK).set(val)
+      end
     end
-    def group_entry
-      ctx.find(GROUP_ENTRY)
+    def group_entry(val)
+      ctx.within_frame(iframe) do
+        ctx.find(GROUP_ENTRY).set(val)
+      end
     end
-    def assign_user
-      ctx.find(ASSIGN_USER)
+    def assign_user(val)
+      ctx.within_frame(iframe) do
+        ctx.find(ASSIGN_USER).set(val)
+      end
     end
   end
 end
