@@ -13,7 +13,7 @@ module EmpfinRequestForm
       ctx.find('#okta-signin-password').set(PASSWORD)
 
       ctx.find('div.navbar-header',
-               text: 'Service Management', wait: 10)
+               text: 'Service Management', wait: 100)
       ctx.visit EMPFIN_REQUEST_URL
     end
   end
