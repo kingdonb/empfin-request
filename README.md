@@ -1,7 +1,8 @@
 # README - empfin-request automation
 
 * Ruby version - 
-ruby-2.6.5
+ruby-2.7.0-preview2
+bundler 2.1.0.pre.2
 
 * System dependencies
     Opens a web browser and depends on a human user who can 2-factor authenticate
