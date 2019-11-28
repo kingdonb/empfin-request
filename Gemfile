@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.0-preview2'
+ruby '2.7.0'
 
 # Launchy for cross-platform 'open'
 # gem 'launchy'
