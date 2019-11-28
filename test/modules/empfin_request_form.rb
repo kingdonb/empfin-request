@@ -13,7 +13,7 @@ module EmpfinRequestForm
       ctx.find('#okta-signin-password').set(PASSWORD)
 
       ctx.find('div.navbar-header',
-               text: 'Service Management', wait: 10)
+               text: 'Service Management', wait: 100)
       ctx.visit EMPFIN_REQUEST_URL
     end
   end
@@ -33,6 +33,26 @@ module EmpfinRequestForm
         ctx.find('#item_table')
         ctx.find('table td.guide_tray', text: 'Customer Care Request')
       end
+    end
+
+    def fill_out_with_row(row)
+      fill_out(
+        work: row[:short_description],
+        group: row[:group],
+        user: row[:assigned_to],
+        request_on_behalf_of: row[:behalf_of],
+        task_short_description: row[:short_description],
+        description: row[:long_description],
+        work_notes: row[:work_note],
+        business_service: row[:bus_service],
+        business_application_impacted: row[:bus_service],
+        priority_order: row[:more_info],
+        state: row[:state],
+        what_oit_resources_needed: row[:oit_resources],
+        # due_date: row[:due_date],
+        what_do_i_estimate_my_effort_hrs: row[:time_estimate],
+        what_do_i_expect_to_be_delivered: row[:deliverables],
+      )
     end
 
     def fill_out(work:, group:, user:)
@@ -57,6 +77,19 @@ module EmpfinRequestForm
       return request_no
     end
 
+    def follow_req_link(req_no)
+      request_link = ctx.find('a#requesturl', text: req_no)
+      request_link.click
+    end
+
+    def find_ritm_number
+      tab = ctx.find('span.tab_caption_text', text: 'Requested Items')
+      link = ctx.find('a.linked.formlink', text: 'RITM00')
+      text = link.text
+      return link, text
+    end
+
+    # short description - needs to be munged later
     def describe_what_work(val)
       ctx.within_frame(iframe) do
         ctx.find(DESCRIBE_WHAT_WORK).set(val)
