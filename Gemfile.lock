@@ -264,31 +264,31 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bootsnap (>= 1.4.2)
+  bootsnap
   byebug
-  capybara (>= 2.15)
+  capybara
   dotenv
-  jbuilder (~> 2.7)
-  listen (>= 3.0.5, < 3.2)
+  jbuilder
+  listen
   pry-rails
-  puma (~> 3.11)
+  puma
   rails!
   rspec-core!
   rspec-expectations!
   rspec-mocks!
   rspec-rails!
   rspec-support!
-  sass-rails (~> 5)
+  sass-rails
   selenium-webdriver
   smarter_csv
   spring
-  spring-watcher-listen (~> 2.0.0)
-  sqlite3 (~> 1.4)
-  turbolinks (~> 5)
+  spring-watcher-listen
+  sqlite3
+  turbolinks
   tzinfo-data
-  web-console (>= 3.3.0)
+  web-console
   webdrivers
-  webpacker (~> 4.0)
+  webpacker
 
 RUBY VERSION
    ruby 2.7.0p-1
