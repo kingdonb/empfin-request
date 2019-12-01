@@ -34,7 +34,7 @@ eg: dXNlcm5hbWU6cGFzc3dvcmQK
     There is no database
 ```
 
-* Database initialization
+### Database initialization
 
 ```
     Two files are created as output, although their opening state may be
@@ -42,6 +42,21 @@ eg: dXNlcm5hbWU6cGFzc3dvcmQK
     rake task. (The test:system task will attempt to skip processing for any
     rows that were already processed, through this mechanism.)
 ```
+
+#### Two Files (output)
+  - one file is constructed at-once, with a manifest of all tickets parsed from the input, and their keys
+      eg. output-cc-file.csv
+
+```
+Finance,1512,ARP
+Finance,1510,ARP
+Human Resources,1450,Workterra
+Human Resources,1225,HR I-9 Notify
+Human Resources,1224,HR I-9 Notify
+```
+
+  - one file is constructed iteratively, as the test:system execution creates or updates tickets through visiting ServiceNow pages, scanning them and POSTing to them, the system test records the REQ,RITM,TASK as they are generated too, along with some status details gathered by visiting them, if those keys were already recorded once before.
+  - (In successive iteration, these files will be used to filter and skip records that were already processed.)
 
 * How to run the test suite
 
