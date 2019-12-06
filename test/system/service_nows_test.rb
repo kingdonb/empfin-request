@@ -8,23 +8,33 @@ class ServiceNowsTest < ApplicationSystemTestCase
     EmpfinRequestForm::Login.new(ctx: self)
 
     # sanity check - did we land on the right form?
-    iframe = find('main iframe#gsft_main', wait: 10)
-    within_frame(iframe) do
+    #iframe = find('main iframe#gsft_main', wait: 10)
+    #within_frame(iframe) do
       find('#item_table')
       find('table td.guide_tray', text: 'Customer Care Request')
-    end
+    #end
+
+    o = SmarterCSV.process('output-cc-file.csv')
 
     # SmarterCSV generates an array of hashes
-    s = SmarterCSV.process('new-cc-file.csv')
+    #s = SmarterCSV.process('new-cc-file.csv')
+    s = SmarterCSV.process('orig-cc-file.csv')
+
+    # Filter any records present in output-cc-file from the list of records to process
+    records_to_reject = o.map{|a| a[:original_key]}
+    t = s.reject{|b| records_to_reject.include? b[:short_description]}
+
     # We will take only the first element from the array, until we are
     # satisfied that the automated process captures everything and reacts
     # properly to data entry errors.
-    row = s.first
+    row = t.first
+
+    binding.pry
 
     f = EmpfinRequestForm::Fillout.
-      new(ctx: self, iframe: iframe)
+      new(ctx: self, iframe: nil) # There is no iframe now! cool
 
-    f.fill_out_with_row(row)
+    f.fill_out_1_with_row(row)
     # f.fill_out(
     #   work: 'KB - This is a Test - Test of long text description - Please perform the following steps (test) Test - KB - TEST ONLY',
     #   group: 'Employee Finance Solutions',
