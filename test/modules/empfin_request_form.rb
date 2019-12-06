@@ -1,5 +1,6 @@
 module EmpfinRequestForm
-  EMPFIN_REQUEST_URL = 'https://nd.service-now.com/com.glideapp.servicecatalog_cat_item_view.do?v=1&sysparm_id=9f4426e6db403200de73f5161d96198d'
+  #EMPFIN_REQUEST_URL = 'https://nd.service-now.com/com.glideapp.servicecatalog_cat_item_view.do?v=1&sysparm_id=9f4426e6db403200de73f5161d96198d'
+  EMPFIN_REQUEST_URL = 'https://ndtest.service-now.com/com.glideapp.servicecatalog_cat_item_view.do?v=1&sysparm_id=9f4426e6db403200de73f5161d96198d'
 
   class Login
     USERNAME_PASSWORD_BASE64 = ENV.fetch('USERNAME_PASSWORD_BASE64')
@@ -8,7 +9,8 @@ module EmpfinRequestForm
     PASSWORD = USERNAME_PASSWORD.split(':')[1]
 
     def initialize(username: USERNAME, password: PASSWORD, ctx:)
-      ctx.visit 'https://sn.nd.edu'
+      #ctx.visit 'https://sn.nd.edu'
+      ctx.visit 'https://ndtest.service-now.com'
       ctx.find('#okta-signin-username').set(USERNAME)
       ctx.find('#okta-signin-password').set(PASSWORD)
 
