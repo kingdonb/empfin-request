@@ -82,7 +82,7 @@ module EmpfinRequestForm
       binding.pry
     end
 
-    def submit
+    def submit_1
       request_no = nil
       #ctx.within_frame(iframe) do
         order_now = ctx.find('button#oi_order_now_button')
@@ -98,9 +98,15 @@ module EmpfinRequestForm
       return request_no
     end
 
+    def submit_2
+      binding.pry
+    end
+
     def follow_req_link(req_no)
       request_link = ctx.find('a#requesturl', text: req_no)
+      req_link_url = request_link[:href]
       request_link.click
+      return req_link_url
     end
 
     def find_ritm_number
@@ -108,6 +114,10 @@ module EmpfinRequestForm
       link = ctx.find('a.linked.formlink', text: 'RITM00')
       text = link.text
       return link, text
+    end
+
+    def find_task_number
+      binding.pry
     end
 
     # short description - needs to be munged later
