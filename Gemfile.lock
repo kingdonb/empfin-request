@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rails/rails.git
-  revision: cb17a9fe5a5955e39b84a9a3ca29ff8be70e3900
+  revision: ce5718aeefeacb2b3ff6f30ad698d66f6ac10346
   specs:
     actioncable (6.1.0.alpha)
       actionpack (= 6.1.0.alpha)
@@ -24,7 +24,7 @@ GIT
     actionpack (6.1.0.alpha)
       actionview (= 6.1.0.alpha)
       activesupport (= 6.1.0.alpha)
-      rack (~> 2.0)
+      rack (~> 2.0, >= 2.0.8)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
@@ -59,7 +59,7 @@ GIT
       i18n (>= 1.6, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-      zeitwerk (~> 2.2)
+      zeitwerk (~> 2.2, >= 2.2.2)
     rails (6.1.0.alpha)
       actioncable (= 6.1.0.alpha)
       actionmailbox (= 6.1.0.alpha)
@@ -80,11 +80,11 @@ GIT
       activesupport (= 6.1.0.alpha)
       method_source
       rake (>= 0.8.7)
-      thor (>= 0.20.3, < 2.0)
+      thor (~> 1.0)
 
 GIT
   remote: https://github.com/rspec/rspec-core.git
-  revision: b7067c5da4fde57cbbff739b168008482e61db44
+  revision: 07aa08b97926ce3ccf0798490bd8568219dc2117
   branch: master
   specs:
     rspec-core (3.10.0.pre)
@@ -92,7 +92,7 @@ GIT
 
 GIT
   remote: https://github.com/rspec/rspec-expectations.git
-  revision: 85d6188d7bb41cc860bdd3330f7accd1f78418bd
+  revision: 33e3c614f82be81f81e09f8725b6bc450f7c40d0
   branch: master
   specs:
     rspec-expectations (3.10.0.pre)
@@ -101,7 +101,7 @@ GIT
 
 GIT
   remote: https://github.com/rspec/rspec-mocks.git
-  revision: 5b897e8f74f3059aef43f1ed5f91719f2267a04e
+  revision: b934fafd2b0699df8a18f6a590530c08a3a9508e
   branch: master
   specs:
     rspec-mocks (3.10.0.pre)
@@ -110,7 +110,7 @@ GIT
 
 GIT
   remote: https://github.com/rspec/rspec-rails.git
-  revision: d0f81dfccf92df655caeacfd1ce0ba1808779f99
+  revision: 930c141bbc5acdb3b88bf912f44f52758f1f131f
   branch: master
   specs:
     rspec-rails (4.0.0.pre)
@@ -124,7 +124,7 @@ GIT
 
 GIT
   remote: https://github.com/rspec/rspec-support.git
-  revision: 673133cdd13b17077b3d88ece8d7380821f8d7dc
+  revision: a87275efff996096d29a5bdbf5d7dd9b785107a0
   branch: master
   specs:
     rspec-support (3.10.0.pre)
@@ -137,7 +137,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
-    builder (3.2.3)
+    builder (3.2.4)
     byebug (11.0.1)
     capybara (3.29.0)
       addressable
@@ -161,7 +161,7 @@ GEM
       concurrent-ruby (~> 1.0)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
-    listen (3.2.0)
+    listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     loofah (2.4.0)
@@ -178,7 +178,7 @@ GEM
     minitest (5.13.0)
     msgpack (1.3.1)
     nio4r (2.5.2)
-    nokogiri (1.10.5)
+    nokogiri (1.10.7)
       mini_portile2 (~> 2.4.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -186,9 +186,9 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.1)
-    puma (4.3.0)
+    puma (4.3.1)
       nio4r (~> 2.0)
-    rack (2.0.7)
+    rack (2.0.8)
     rack-proxy (0.6.5)
       rack
     rack-test (1.1.0)
@@ -229,8 +229,8 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.1)
-    thor (0.20.3)
+    sqlite3 (1.4.2)
+    thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
     turbolinks (5.2.1)
@@ -247,7 +247,7 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (>= 3.0, < 4.0)
-    webpacker (4.2.0)
+    webpacker (4.2.2)
       activesupport (>= 4.2)
       rack-proxy (>= 0.6.1)
       railties (>= 4.2)
@@ -256,7 +256,7 @@ GEM
     websocket-extensions (0.1.4)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.2.1)
+    zeitwerk (2.2.2)
 
 PLATFORMS
   ruby
