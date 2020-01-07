@@ -56,6 +56,19 @@ eg: dXNlcm5hbWU6cGFzc3dvcmQK
     The rake task depends on a live internet connection and the ServiceNow
     instance running at https://sn.nd.edu
 
+There are two places where "app_host" is set, in the source code at `test/test_helper.rb`:
+#  Capybara.app_host = 'https://sn.nd.edu'
+  Capybara.app_host = 'https://ndtest.service-now.com'
+
+and in the source code again at `test/modules/empfin_request_form.rb`:
+
+```
+module EmpfinRequestForm
+  #EMPFIN_REQUEST_URL = 'https://nd.service-now.com/com.glideapp.servicecatalog_cat_item_view.do?v=1&sysparm_id=9f4426e6db403200de73f5161d96198d'
+  EMPFIN_REQUEST_URL = 'https://ndtest.service-now.com/com.glideapp.servicecatalog_cat_item_view.do?v=1&sysparm_id=9f4426e6db403200de73f5161d96198d'
+```
+
+
 * Deployment instructions
 
 ```
