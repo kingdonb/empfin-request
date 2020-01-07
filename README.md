@@ -3,8 +3,11 @@
 * Ruby version - 
 
 ```
-ruby-2.7.0-preview2
-bundler 2.1.0.pre.2
+RUBY VERSION
+   ruby 2.6.5p114
+
+BUNDLED WITH
+   1.17.3
 ```
 
 * System dependencies
