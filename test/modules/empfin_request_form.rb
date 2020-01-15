@@ -149,9 +149,8 @@ module EmpfinRequestForm
       request_no = nil
       #ctx.within_frame(iframe) do
         order_now = ctx.find('button#oi_order_now_button')
-        #KB pending - do not automate this until we have consensus
-        # order_now.click
-        binding.pry
+        #binding.pry
+        order_now.click
         ctx.find('span',
                  text: 'Thank you, your request has been submitted')
         request_link = ctx.find('a#requesturl')
