@@ -95,6 +95,23 @@ module EmpfinRequestForm
       'select[id="IO:d5bbaa0a0ff4d240a6c322d8b1050e1e"]'
     ON_BEHALF_OF_WHOM =
       'input[id="sys_display.IO:23cb6a0a0ff4d240a6c322d8b1050e2d"]'
+    TASK_SHORT_DESCRIPTION =
+      'input[id="sc_task.short_description"]'
+    TASK_DESCRIPTION =
+      'textarea[id="activity-stream-textarea"]'
+    TASK_BUSINESS_SERVICE =
+      'input[id="sys_display.sc_task.business_service"]'
+#    TASK_BUSINESS_APPLICATION = 
+#      TODO
+      #business_application_impacted: row[:bus_service],
+#    TASK_PRIORITY_ORDER = 
+#      ''
+      # priority_order: row[:more_info],
+      # state: row[:state],
+      # what_oit_resources_needed: row[:oit_resources],
+      # # due_date: row[:due_date],
+      # what_do_i_estimate_my_effort_hrs: row[:time_estimate],
+      # what_do_i_expect_to_be_delivered: row[:deliverables],
     attr_reader :ctx, :iframe
 
     def initialize(ctx:, iframe:)
