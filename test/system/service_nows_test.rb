@@ -55,12 +55,13 @@ class ServiceNowsTest < ApplicationSystemTestCase
       new(ctx: self, iframe: nil) # There is no iframe now! cool
 
     if output_row[:req_id].present?
-      output_req_url = EmpfinRequestForm.get_url_by_req_id(output: o, req_id: output_row[:req_id])
+      req_no = output_row[:req_id]
+      output_req_url = EmpfinRequestForm.get_url_by_req_id(output: o, req_id: req_no)
     end
 
     if output_req_url.present?
       visit output_req_url
-      req_url = output_req_url
+      req_link_url = output_req_url
     else
       f.fill_out_1_with_row(row)
       # When submit returns, you either have obtained a req_no or failure
@@ -75,7 +76,9 @@ class ServiceNowsTest < ApplicationSystemTestCase
     ritm_link, ritm_no = f.find_ritm_number
     ritm_link.click
 
+    # TASK contains everything important from here on, the RITM is not important
     task_link, task_no = f.find_task_number
+    task_link.click
 
     f.fill_out_2_with_row(row)
     f.submit_2

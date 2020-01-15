@@ -179,7 +179,10 @@ module EmpfinRequestForm
     end
 
     def find_task_number
-      binding.pry
+      tab = ctx.find('span.tab_caption_text', text: 'Catalog Tasks')
+      link = ctx.find('a.linked.formlink', text: 'TASK00')
+      text = link.text
+      return link, text
     end
 
     # short description - needs to be munged later
