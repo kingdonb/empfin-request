@@ -22,36 +22,51 @@ class ServiceNowsTest < ApplicationSystemTestCase
 
     begin
 
-    short_description = row[:short_description]
-    output_row = {:original_key=>short_description,
-                  :on_behalf_of_department=>nil,
-                  :original_id=>nil,
-                  :business_application=>nil,
-                  :req_id=>nil,
-                  :ritm_id=>nil,
-                  :task_id=>nil,
-                  :req_url=>"",
-                  :ritm_url=>"",
-                  :task_url=>""}
+      short_description = row[:short_description]
 
-    r = /^CC: (.*) -  #(\d+) (.*)$/
-    m = r.match(short_description)
+      output_row = EmpfinRequestForm.get_row_by_original_key(output: o, original_key: short_description)
 
-    on_behalf_of_department, original_id, business_application = m[1], m[2], m[3]
-    output_row[:on_behalf_of_department] = on_behalf_of_department
-    output_row[:original_id]             = original_id
-    output_row[:business_application]    = business_application
+      if output_row.present?
+        # we have a work in progress output row
+      else
+        output_row = {:original_key=>short_description,
+                      :on_behalf_of_department=>nil,
+                      :original_id=>nil,
+                      :business_application=>nil,
+                      :req_id=>nil,
+                      :ritm_id=>nil,
+                      :task_id=>nil,
+                      :req_url=>"",
+                      :ritm_url=>"",
+                      :task_url=>""}
 
-    o << output_row
+        r = /^CC: (.*) -  #(\d+) (.*)$/
+        m = r.match(short_description)
+
+        on_behalf_of_department, original_id, business_application = m[1], m[2], m[3]
+        output_row[:on_behalf_of_department] = on_behalf_of_department
+        output_row[:original_id]             = original_id
+        output_row[:business_application]    = business_application
+
+        o << output_row
+      end
 
     f = EmpfinRequestForm::Fillout.
       new(ctx: self, iframe: nil) # There is no iframe now! cool
 
-    f.fill_out_1_with_row(row)
+    if output_row[:req_id].present?
+      output_req_url = EmpfinRequestForm.get_url_by_req_id(output: o, req_id: output_row[:req_id])
+    end
 
-    # When submit returns, you either have obtained a req_no or failure
-    req_no = f.submit_1
-    req_link_url = f.follow_req_link(req_no)
+    if output_req_url.present?
+      visit output_req_url
+      req_url = output_req_url
+    else
+      f.fill_out_1_with_row(row)
+      # When submit returns, you either have obtained a req_no or failure
+      req_no = f.submit_1
+      req_link_url = f.follow_req_link(req_no)
+    end
 
     output_row[:req_id]  = req_no
     output_row[:req_url] = req_link_url
