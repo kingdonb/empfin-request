@@ -7,22 +7,13 @@ class ServiceNowsTest < ApplicationSystemTestCase
   test 'login and submit a request, then visit the request item' do
     EmpfinRequestForm::Login.new(ctx: self)
 
-    # sanity check - did we land on the right form?
-    #iframe = find('main iframe#gsft_main', wait: 10)
-    #within_frame(iframe) do
-      find('#item_table')
-      find('table td.guide_tray', text: 'Customer Care Request')
-    #end
+    find('#item_table')
+    find('table td.guide_tray', text: 'Customer Care Request')
 
     o = SmarterCSV.process('output-cc-file.csv')
-
-    # SmarterCSV generates an array of hashes
-    #s = SmarterCSV.process('new-cc-file.csv')
     s = SmarterCSV.process('orig-cc-file.csv')
 
-    # Filter any records present in output-cc-file from the list of records to process
-    records_to_reject = o.map{|a| a[:original_key]}
-    t = s.reject{|b| records_to_reject.include? b[:short_description]}
+    t = EmpfinRequestForm.filter_orig_by_output(orig: s, output: o)
 
     # We will take only the first element from the array, until we are
     # satisfied that the automated process captures everything and reacts
@@ -51,17 +42,12 @@ class ServiceNowsTest < ApplicationSystemTestCase
     output_row[:original_id]             = original_id
     output_row[:business_application]    = business_application
 
-    binding.pry
+    o << output_row
 
     f = EmpfinRequestForm::Fillout.
       new(ctx: self, iframe: nil) # There is no iframe now! cool
 
     f.fill_out_1_with_row(row)
-    # f.fill_out(
-    #   work: 'KB - This is a Test - Test of long text description - Please perform the following steps (test) Test - KB - TEST ONLY',
-    #   group: 'Employee Finance Solutions',
-    #   user: 'Kingdon Barrett'
-    # )
 
     # When submit returns, you either have obtained a req_no or failure
     req_no = f.submit_1
@@ -87,7 +73,7 @@ class ServiceNowsTest < ApplicationSystemTestCase
     #   were already processed
 
     ensure
-      o << output_row
+      EmpfinRequestForm.to_csv(input_array: o, csv_filename: 'output-cc-file.csv')
       # write "o" back out to the file it came from
     end
 
