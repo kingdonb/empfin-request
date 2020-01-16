@@ -101,17 +101,9 @@ module EmpfinRequestForm
       'textarea[id="activity-stream-textarea"]'
     TASK_BUSINESS_SERVICE =
       'input[id="sys_display.sc_task.business_service"]'
-#    TASK_BUSINESS_APPLICATION = 
-#      TODO
-      #business_application_impacted: row[:bus_service],
-#    TASK_PRIORITY_ORDER = 
-#      ''
-      # priority_order: row[:more_info],
-      # state: row[:state],
-      # what_oit_resources_needed: row[:oit_resources],
+    TASK_STATE =
+      'select[id="sc_task.state"]'
       # # due_date: row[:due_date],
-      # what_do_i_estimate_my_effort_hrs: row[:time_estimate],
-      # what_do_i_expect_to_be_delivered: row[:deliverables],
     attr_reader :ctx, :iframe
 
     def initialize(ctx:, iframe:)
@@ -158,15 +150,35 @@ module EmpfinRequestForm
                    business_application_impacted:, priority_order:, state:,
                    what_oit_resources_needed:,
                    what_do_i_estimate_my_effort_hrs:, what_do_i_expect_to_be_delivered:)
-      # TODO
-      binding.pry
+      ctx.find(TASK_SHORT_DESCRIPTION).set(task_short_description)
+      ctx.find(TASK_DESCRIPTION).set(description)
+      ctx.find(TASK_BUSINESS_SERVICE).set(business_service)
+
+      ctx.find('span.sn-tooltip-basic', text: 'What Business Application is impacted?').
+        find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
+        find('input').set(business_application_impacted)
+      ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+               text: business_application_impacted).click
+      ctx.find('span.sn-tooltip-basic', text: 'Priority Order').
+        find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
+        find('input').set(priority_order)
+      ctx.find('span.sn-tooltip-basic', text: 'What OIT resources are needed to handle this request?').
+        find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
+        find('textarea').set(what_oit_resources_needed)
+      ctx.find('span.sn-tooltip-basic', text: "What do I estimate my or my team's effort (hrs) needed to perform this request?").
+        find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
+        find('input').set(what_do_i_estimate_my_effort_hrs)
+      ctx.find('span.sn-tooltip-basic', text: 'What do you expect to be delivered at the completion of this request?').
+        find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
+        find('textarea').set(what_do_i_expect_to_be_delivered)
+      ctx.find(TASK_STATE).select(state)
     end
 
     def submit_1
       request_no = nil
       #ctx.within_frame(iframe) do
         order_now = ctx.find('button#oi_order_now_button')
-        #binding.pry
+        # binding.pry
         order_now.click
         ctx.find('span',
                  text: 'Thank you, your request has been submitted')
@@ -178,7 +190,8 @@ module EmpfinRequestForm
     end
 
     def submit_2
-      binding.pry
+      ctx.all('button', text: 'Update').first.click
+      # binding.pry
     end
 
     def follow_req_link(req_no)
@@ -216,6 +229,8 @@ module EmpfinRequestForm
     def assign_user(val)
       #ctx.within_frame(iframe) do
         ctx.find(ASSIGN_USER).set(val)
+        ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+                 text: val).click
       #end
     end
 
