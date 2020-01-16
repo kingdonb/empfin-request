@@ -157,6 +157,7 @@ module EmpfinRequestForm
       ctx.find('span.sn-tooltip-basic', text: 'What Business Application is impacted?').
         find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
         find('input').set(business_application_impacted)
+      # binding.pry
       ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
                text: business_application_impacted).click
       ctx.find('span.sn-tooltip-basic', text: 'Priority Order').
@@ -224,11 +225,13 @@ module EmpfinRequestForm
     def group_entry(val)
       #ctx.within_frame(iframe) do
         ctx.find(GROUP_ENTRY).set(val)
+        ctx.find('span', text: val).click
       #end
     end
     def assign_user(val)
       #ctx.within_frame(iframe) do
         ctx.find(ASSIGN_USER).set(val)
+        # binding.pry
         ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
                  text: val).click
       #end
@@ -237,6 +240,8 @@ module EmpfinRequestForm
     def yes_on_behalf_of(val)
       ctx.find(IS_ON_BEHALF_OF).select('Yes')
       ctx.find(ON_BEHALF_OF_WHOM).set(val)
+      ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+               text: val).click
     end
   end
 end
