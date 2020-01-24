@@ -157,9 +157,16 @@ module EmpfinRequestForm
       ctx.find('span.sn-tooltip-basic', text: 'What Business Application is impacted?').
         find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
         find('input').set(business_application_impacted)
-      # binding.pry
-      ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
-               text: business_application_impacted).click
+      unless ctx.all('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+          text: business_application_impacted).count == 1
+        puts "Business Application Impacted: #{business_application_impacted}"
+        # Please click the business application impacted
+        binding.pry
+      else
+        ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+                 text: business_application_impacted).click
+      end
+
       ctx.find('span.sn-tooltip-basic', text: 'Priority Order').
         find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
         find('input').set(priority_order)
@@ -225,23 +232,45 @@ module EmpfinRequestForm
     def group_entry(val)
       #ctx.within_frame(iframe) do
         ctx.find(GROUP_ENTRY).set(val)
-        ctx.find('span', text: val).click
+
+        unless ctx.all('span', text: val).count == 1
+          puts "Group to assign to: #{val}"
+          # Please click the group to assign
+          binding.pry
+        else
+          ctx.find('span', text: val).click
+        end
       #end
     end
     def assign_user(val)
       #ctx.within_frame(iframe) do
         ctx.find(ASSIGN_USER).set(val)
-        # binding.pry
-        ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
-                 text: val).click
+
+        unless ctx.all('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+            text: val).count == 1
+          puts "User to assign to: #{val}"
+          # Please click the user to assign
+          binding.pry
+        else
+          ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+                   text: val).click
+        end
       #end
     end
 
     def yes_on_behalf_of(val)
       ctx.find(IS_ON_BEHALF_OF).select('Yes')
       ctx.find(ON_BEHALF_OF_WHOM).set(val)
-      ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
-               text: val).click
+
+      unless ctx.all('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+          text: val).count == 1
+        puts "Submitted on behalf of: #{val}"
+        # Please click the user submitted on behalf of
+        binding.pry
+      else
+        ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+                 text: val).click
+      end
     end
   end
 end
