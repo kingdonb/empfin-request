@@ -80,6 +80,10 @@ module EmpfinRequestForm
       ctx.find('div.navbar-header', text: "ServiceNow Home Page\nTEST", wait: 30)
       #ctx.find('div.navbar-header',
       #         text: 'Service Management', wait: 100)
+      visit_request_url(ctx: ctx)
+    end
+
+    def visit_request_url(ctx: ctx)
       ctx.visit EMPFIN_REQUEST_URL
     end
   end
@@ -155,12 +159,12 @@ module EmpfinRequestForm
 
       ctx.find(TASK_BUSINESS_SERVICE).set(business_service)
 
-      unless ctx.all('input[id="sys_display.sc_task.business_service"]').count == 1
+      unless ctx.all('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)', text: business_service).count == 1
         puts "Business Service: #{business_service}"
         # Please click the business service
         binding.pry
       else
-        ctx.find('input[id="sys_display.sc_task.business_service"]').click
+        ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)', text: business_service).click
       end
 
       ctx.find('span.sn-tooltip-basic', text: 'What Business Application is impacted?').
