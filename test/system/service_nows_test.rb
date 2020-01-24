@@ -15,12 +15,8 @@ class ServiceNowsTest < ApplicationSystemTestCase
 
     t = EmpfinRequestForm.filter_orig_by_output(orig: s, output: o)
 
-    # We will take only the first element from the array, until we are
-    # satisfied that the automated process captures everything and reacts
-    # properly to data entry errors.
-    row = t.first
-
-    begin
+    t.each do |row|
+    begin ## "t.each"
 
       short_description = row[:short_description]
 
@@ -93,6 +89,9 @@ class ServiceNowsTest < ApplicationSystemTestCase
       EmpfinRequestForm.to_csv(input_array: o, csv_filename: 'output-cc-file.csv')
       # write "o" back out to the file it came from
     end
+
+    end
+    ## end "t.each"
 
   end
 end

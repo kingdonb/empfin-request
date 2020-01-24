@@ -152,7 +152,16 @@ module EmpfinRequestForm
                    what_do_i_estimate_my_effort_hrs:, what_do_i_expect_to_be_delivered:)
       ctx.find(TASK_SHORT_DESCRIPTION).set(task_short_description)
       ctx.find(TASK_DESCRIPTION).set(description)
+
       ctx.find(TASK_BUSINESS_SERVICE).set(business_service)
+
+      unless ctx.all('input[id="sys_display.sc_task.business_service"]').count == 1
+        puts "Business Service: #{business_service}"
+        # Please click the business service
+        binding.pry
+      else
+        ctx.find('input[id="sys_display.sc_task.business_service"]').click
+      end
 
       ctx.find('span.sn-tooltip-basic', text: 'What Business Application is impacted?').
         find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
