@@ -126,24 +126,45 @@ RSpec.describe EmpfinRequestForm::Fillout do
       end
     end
 
-    describe "fill out the Describe What Work field" do
+    context "mostly simple fillout methods" do
       let(:field) { double('field') }
       let(:value) { double('value') }
-      it '#describe_what_work' do
-        expect(ctx).to receive(:find).with(EmpfinRequestForm::Fillout::DESCRIBE_WHAT_WORK).and_return field
-        expect(field).to receive(:set).with(value)
-        subject.describe_what_work(value)
+      describe "fill out the Describe What Work field" do
+        it '#describe_what_work' do
+          expect(ctx).to receive(:find).with(EmpfinRequestForm::Fillout::DESCRIBE_WHAT_WORK).and_return field
+          expect(field).to receive(:set).with(value)
+          subject.describe_what_work(value)
+        end
       end
-    end
-    xcontext 'select from a list entry' do
-      it '#group_entry' do
-        subject.group_entry
-      end
-      it '#assign_user' do
-        subject.assign_user
-      end
-      it '#yes_on_behalf_of' do
-        subject.yes_on_behalf_of
+      context 'select from a list entry' do
+        let(:things_to_click) { [double('span')] }
+        it '#group_entry' do
+          expect(things_to_click.first).to receive(:click)
+          expect(ctx).to receive(:find).with(EmpfinRequestForm::Fillout::GROUP_ENTRY).and_return field
+          expect(ctx).to receive(:all).and_return(things_to_click)
+          expect(field).to receive(:set).with(value)
+          expect(ctx).to receive(:find).with('span', text: value).and_return things_to_click.first
+          subject.group_entry(value)
+        end
+        it '#assign_user' do
+          expect(things_to_click.first).to receive(:click)
+          expect(ctx).to receive(:find).with(EmpfinRequestForm::Fillout::ASSIGN_USER).and_return field
+          expect(ctx).to receive(:all).and_return(things_to_click)
+          expect(field).to receive(:set).with(value)
+          expect(ctx).to receive(:find).with('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)', text: value).and_return things_to_click.first
+          subject.assign_user(value)
+        end
+        it '#yes_on_behalf_of' do
+          checkbox = double('is_on_behalf_of')
+          expect(things_to_click.first).to receive(:click)
+          expect(checkbox).to receive(:select).with('Yes')
+          expect(ctx).to receive(:find).with(EmpfinRequestForm::Fillout::IS_ON_BEHALF_OF).ordered.and_return checkbox
+          expect(ctx).to receive(:find).with(EmpfinRequestForm::Fillout::ON_BEHALF_OF_WHOM).ordered.and_return field
+          expect(ctx).to receive(:all).and_return(things_to_click)
+          expect(field).to receive(:set).with(value)
+          expect(ctx).to receive(:find).with('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)', text: value).and_return things_to_click.first
+          subject.yes_on_behalf_of(value)
+        end
       end
     end
   end
