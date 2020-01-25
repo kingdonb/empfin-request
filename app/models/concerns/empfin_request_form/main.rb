@@ -14,6 +14,7 @@ module EmpfinRequestForm
       validate_login_destination
       setup_csv_context
 
+      main_loop
     end
 
     private
@@ -21,7 +22,7 @@ module EmpfinRequestForm
     attr_reader :login_handle
 
     def do_login
-      @login_handle = EmpfinRequestForm::Login.new(ctx: self)
+      @login_handle = EmpfinRequestForm::Login.new(ctx: ctx)
     end
 
     def validate_login_destination
@@ -76,7 +77,7 @@ module EmpfinRequestForm
           end
 
           f = EmpfinRequestForm::Fillout.
-            new(ctx: self, iframe: nil) # There is no iframe now! cool
+            new(ctx: ctx, iframe: nil) # There is no iframe now! cool
 
           if output_row[:req_id].present?
             req_no = output_row[:req_id]
@@ -84,7 +85,7 @@ module EmpfinRequestForm
           end
 
           if output_req_url.present?
-            visit output_req_url
+            ctx.visit output_req_url
             req_link_url = output_req_url
           else
             f.fill_out_1_with_row(row)
@@ -117,7 +118,7 @@ module EmpfinRequestForm
           # write "o" back out to the file it came from
         end
 
-        login_handle.visit_request_url(ctx: self)
+        login_handle.visit_request_url(ctx: ctx)
 
       end
       ## end "t.each"
