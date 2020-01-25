@@ -13,8 +13,8 @@ gem 'dotenv'
 gem 'smarter_csv'
 
 # Bundle edge Rails instead:
-gem 'rails', github: 'rails/rails'
-#gem 'rails', '~> 6.0.0'
+#gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 6.0.0'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server
@@ -41,12 +41,14 @@ gem 'bootsnap', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  # Run RSpec against the latest (un)stable release: RSpec 4.0
-  %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
-    gem lib, :git => "https://github.com/rspec/#{lib}.git", :branch => 'master'
-    # this release policy in RSpec 4.0 may enforce Ruby version upgrades after
-    # a minor or major version update from upstream MRI
-  end
+  gem 'rspec'
+  gem 'rspec-rails', '~> 3.0'
+  # # Run RSpec against the latest (un)stable release: RSpec 4.0
+  # %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
+  #   gem lib, :git => "https://github.com/rspec/#{lib}.git", :branch => 'master'
+  #   # this release policy in RSpec 4.0 may enforce Ruby version upgrades after
+  #   # a minor or major version update from upstream MRI
+  # end
 end
 
 group :development do
@@ -56,6 +58,8 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen'
+  gem 'guard'
+  gem 'guard-rspec', '~> 4.7', require: false
 end
 
 group :test do
