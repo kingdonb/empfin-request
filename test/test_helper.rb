@@ -9,7 +9,8 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   # fixtures :all
 
-  Capybara.app_host = 'https://sn.nd.edu'
+  Capybara.app_host = EmpfinRequestForm::SERVICENOW_SITE_URL
+#  Capybara.app_host = 'https://sn.nd.edu'
 #  Capybara.app_host = 'https://ndtest.service-now.com'
   Capybara.run_server = false # don't start Rack
 
