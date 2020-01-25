@@ -32,16 +32,16 @@ module EmpfinRequestForm
   def filter_orig_by_output(orig:, output:)
     records_to_reject = output.
       map{|a| a[:original_key]}
-        .select do |a|
-          matching_o = output.select do |b|
-            a == b[:original_key]
-          end
+      .select do |a|
+      matching_o = output.select do |b|
+        a == b[:original_key]
+      end
 
-          if matching_o.count > 1
-            flunk("something wrong, output_row contains the same record more than once")
-          else
-            matching_o = matching_o.first
-          end
+      if matching_o.count > 1
+        flunk("something wrong, output_row contains the same record more than once")
+      else
+        matching_o = matching_o.first
+      end
 
       reject_this_one = matching_o[:req_id].present? &&
         matching_o[:ritm_id].present? &&
@@ -107,14 +107,14 @@ module EmpfinRequestForm
       'input[id="sys_display.sc_task.business_service"]'
     TASK_STATE =
       'select[id="sc_task.state"]'
-      # # due_date: row[:due_date],
+    # # due_date: row[:due_date],
     attr_reader :ctx, :iframe
 
     def initialize(ctx:, iframe:)
       @ctx = ctx; @iframe = iframe
       #ctx.within_frame(iframe) do
-        ctx.find('#item_table')
-        ctx.find('table td.guide_tray', text: 'Customer Care Request')
+      ctx.find('#item_table')
+      ctx.find('table td.guide_tray', text: 'Customer Care Request')
       #end
     end
 
@@ -198,13 +198,13 @@ module EmpfinRequestForm
     def submit_1
       request_no = nil
       #ctx.within_frame(iframe) do
-        order_now = ctx.find('button#oi_order_now_button')
-        # binding.pry
-        order_now.click
-        ctx.find('span',
-                 text: 'Thank you, your request has been submitted')
-        request_link = ctx.find('a#requesturl')
-        request_no = request_link.text
+      order_now = ctx.find('button#oi_order_now_button')
+      # binding.pry
+      order_now.click
+      ctx.find('span',
+               text: 'Thank you, your request has been submitted')
+      request_link = ctx.find('a#requesturl')
+      request_no = request_link.text
       #end
 
       return request_no
@@ -239,35 +239,35 @@ module EmpfinRequestForm
     # short description - needs to be munged later
     def describe_what_work(val)
       #ctx.within_frame(iframe) do
-        ctx.find(DESCRIBE_WHAT_WORK).set(val)
+      ctx.find(DESCRIBE_WHAT_WORK).set(val)
       #end
     end
     def group_entry(val)
       #ctx.within_frame(iframe) do
-        ctx.find(GROUP_ENTRY).set(val)
+      ctx.find(GROUP_ENTRY).set(val)
 
-        unless ctx.all('span', text: val).count == 1
-          puts "Group to assign to: #{val}"
-          # Please click the group to assign
-          binding.pry
-        else
-          ctx.find('span', text: val).click
-        end
+      unless ctx.all('span', text: val).count == 1
+        puts "Group to assign to: #{val}"
+        # Please click the group to assign
+        binding.pry
+      else
+        ctx.find('span', text: val).click
+      end
       #end
     end
     def assign_user(val)
       #ctx.within_frame(iframe) do
-        ctx.find(ASSIGN_USER).set(val)
+      ctx.find(ASSIGN_USER).set(val)
 
-        unless ctx.all('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
-            text: val).count == 1
-          puts "User to assign to: #{val}"
-          # Please click the user to assign
-          binding.pry
-        else
-          ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
-                   text: val).click
-        end
+      unless ctx.all('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+          text: val).count == 1
+        puts "User to assign to: #{val}"
+        # Please click the user to assign
+        binding.pry
+      else
+        ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+                 text: val).click
+      end
       #end
     end
 
