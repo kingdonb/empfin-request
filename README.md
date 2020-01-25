@@ -37,28 +37,30 @@ eg: dXNlcm5hbWU6cGFzc3dvcmQK
 ### Database initialization
 
 ```
-    Two files are created as output, although their opening state may be
-    considered as part of the runtime decision making matrix in test:system
-    rake task. (The test:system task will attempt to skip processing for any
-    rows that were already processed, through this mechanism.)
+    One file is written as output, and its opening state is considered as part
+    of the decision making matrix in test:system rails task, which provides a
+    runtime environment for the EmpfinRequestForm::Main class to run in.  (The
+    test:system task will attempt to skip processing for any rows that were
+    already processed, through this mechanism.)
 ```
 
-#### Two Files (output)
-  - one file is constructed at-once, with a manifest of all tickets parsed from the input, and their keys
-      eg. output-cc-file.csv
+#### One File (output)
+  - one file is expected to at least exist with no content, and it is written
+      line-at-a-time, with a manifest of all tickets parsed from the input, and
+      their keys, as well as a URL where they can be found. A full compliment
+      of Request, Request Item, and Task Numbers are stored when a row finishes
 
 ```
-Finance,1512,ARP
-Finance,1510,ARP
-Human Resources,1450,Workterra
-Human Resources,1225,HR I-9 Notify
-Human Resources,1224,HR I-9 Notify
+original_key,on_behalf_of_department,original_id,business_application,req_id,ritm_id,task_id,req_url,ritm_url,task_url
+CC: Finance -  #1512 ARP,Finance,1512,ARP,REQ0046506,RITM0047866,TASK0063186,https://ndtest.service-now.com/sc_request.do?sys_id=9d80e9a[...]%5EORDERBYDESCnumber
+CC: Finance -  #1510 ARP,Finance,1510,ARP,REQ0046507,RITM0047867,TASK0063187,https://ndtest.service-now.com/sc_request.do?sys_id=4ca0a5e[...]%5EORDERBYDESCnumber
+CC: Human Resources -  #1450 Workterra,Human Resources,1450,Workterra,REQ0046508,RITM0047868,TASK0063188,https://ndtest.service-now.com/sc_request.do?sys_id=dcb069e[...]%5EORDERBYDESCnumber
 ```
 
-  - one file is constructed iteratively, as the test:system execution creates or updates tickets through visiting ServiceNow pages, scanning them and POSTing to them, the system test records the REQ,RITM,TASK as they are generated too, along with some status details gathered by visiting them, if those keys were already recorded once before.
-  - (In successive iteration, these files will be used to filter and skip records that were already processed.)
+  - output file is constructed iteratively, as the test:system execution creates or updates tickets through visiting ServiceNow pages, scanning them and POSTing to them, the system test records the REQ,RITM,TASK as they are generated too, along with some status details gathered by visiting them, if those keys were already recorded once before.
+  - In successive iteration, these files will be used to filter and skip records that were already processed. Any row with a "REQ" id recorded has been saved, and rows with RITM and TASK ids recorded are finished with their entry.
 
-* How to run the test suite
+* How to run the robotic process
 
 ```
     bundle exec rails test:system
