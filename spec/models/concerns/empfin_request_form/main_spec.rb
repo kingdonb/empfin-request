@@ -36,11 +36,25 @@ RSpec.describe EmpfinRequestForm::Main do
       end
 
       describe "#setup_csv_context" do
-        it 'pending'
+        let(:o) { double('o') }
+        let(:s) { double('s') }
+        let(:t) { double('t') }
+
+        it 'sets up "o", "s", and "t" according to the plan' do
+          expect(SmarterCSV).to receive(:process).with('output-cc-file.csv').ordered.and_return(o)
+          expect(SmarterCSV).to receive(:process).with('orig-cc-file.csv').ordered.and_return(s)
+          expect(EmpfinRequestForm::RowReader).to receive(:filter_orig_by_output).with(orig: s, output: o).and_return(t)
+
+          subject.send(:setup_csv_context)
+          r = {o: subject.send(:o), s: subject.send(:s), t: subject.send(:t)}
+          expect(r).to eq({o: o, s: s, t: t})
+        end
       end
 
       describe "#main_loop" do
-        it 'pending'
+        it 'pending' do
+          subject.send(:main_loop)
+        end
       end
     end
   end
