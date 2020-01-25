@@ -1,24 +1,32 @@
 module EmpfinRequestForm
   class Login
-    USERNAME_PASSWORD_BASE64 = ENV.fetch('USERNAME_PASSWORD_BASE64')
-    USERNAME_PASSWORD = Base64.decode64(USERNAME_PASSWORD_BASE64)
-    USERNAME = USERNAME_PASSWORD.split(':')[0]
-    PASSWORD = USERNAME_PASSWORD.split(':')[1]
+    LOGIN_DATA = ENV.fetch('USERNAME_PASSWORD_BASE64')
 
-    def initialize(username: USERNAME, password: PASSWORD, ctx:)
+    def initialize(login_data: LOGIN_DATA, ctx:)
+      @login_config = LoginConfig.new(login_data)
+
+      okta_heavy_lifting(ctx: ctx)
+      visit_request_url(ctx: ctx)
+    end
+
+    private
+    attr_accessor :login_config
+
+    def okta_heavy_lifting(ctx:)
       #ctx.visit 'https://sn.nd.edu'
       ctx.visit 'https://ndtest.service-now.com'
-      ctx.find('#okta-signin-username').set(USERNAME)
-      ctx.find('#okta-signin-password').set(PASSWORD)
+      ctx.find('#okta-signin-username').set(username)
+      ctx.find('#okta-signin-password').set(password)
 
       ctx.find('div.navbar-header', text: "ServiceNow Home Page\nTEST", wait: 30)
       #ctx.find('div.navbar-header',
       #         text: 'Service Management', wait: 100)
-      visit_request_url(ctx: ctx)
     end
 
     def visit_request_url(ctx:)
       ctx.visit EmpfinRequestForm::EMPFIN_REQUEST_URL
     end
+
+    delegate :username, :password, to: :login_config
   end
 end
