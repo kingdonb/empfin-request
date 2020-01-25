@@ -8,6 +8,9 @@
 /.env.local
 /.env.*
 
+# Ignore code coverage reports.
+/coverage/*
+
 # Ignore bundler config.
 /.bundle
 
