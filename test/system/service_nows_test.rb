@@ -17,14 +17,14 @@ class ServiceNowsTest < ApplicationSystemTestCase
     end
     s = SmarterCSV.process('orig-cc-file.csv')
 
-    t = EmpfinRequestForm.filter_orig_by_output(orig: s, output: o)
+    t = EmpfinRequestForm::RowReader.filter_orig_by_output(orig: s, output: o)
 
     t.each do |row|
       begin ## "t.each"
 
         short_description = row[:short_description]
 
-        output_row = EmpfinRequestForm.get_row_by_original_key(output: o, original_key: short_description)
+        output_row = EmpfinRequestForm::RowReader.get_row_by_original_key(output: o, original_key: short_description)
 
         if output_row.present?
           # we have a work in progress output row
@@ -56,7 +56,7 @@ class ServiceNowsTest < ApplicationSystemTestCase
 
         if output_row[:req_id].present?
           req_no = output_row[:req_id]
-          output_req_url = EmpfinRequestForm.get_url_by_req_id(output: o, req_id: req_no)
+          output_req_url = EmpfinRequestForm::RowReader.get_url_by_req_id(output: o, req_id: req_no)
         end
 
         if output_req_url.present?
@@ -89,7 +89,7 @@ class ServiceNowsTest < ApplicationSystemTestCase
         output_row[:task_id] = task_no
 
       ensure
-        EmpfinRequestForm.to_csv(input_array: o, csv_filename: 'output-cc-file.csv')
+        EmpfinRequestForm::CsvWriter.to_csv(input_array: o, csv_filename: 'output-cc-file.csv')
         # write "o" back out to the file it came from
       end
 

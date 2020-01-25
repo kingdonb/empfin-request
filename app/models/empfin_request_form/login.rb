@@ -18,7 +18,7 @@ module EmpfinRequestForm
     end
 
     def visit_request_url(ctx:)
-      ctx.visit EMPFIN_REQUEST_URL
+      ctx.visit EmpfinRequestForm::EMPFIN_REQUEST_URL
     end
   end
 end
