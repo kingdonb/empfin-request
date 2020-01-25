@@ -19,9 +19,8 @@ module EmpfinRequestForm
       ctx.find('#okta-signin-username').set(username)
       ctx.find('#okta-signin-password').set(password)
 
-      ctx.find('div.navbar-header', text: "ServiceNow Home Page\nTEST", wait: 30)
-      #ctx.find('div.navbar-header',
-      #         text: 'Service Management', wait: 100)
+      ctx.find('div.navbar-header',
+               text: EmpfinRequestForm::SERVICENOW_HOME_PAGE_STRING, wait: 30)
     end
 
     def visit_request_url(ctx:)
