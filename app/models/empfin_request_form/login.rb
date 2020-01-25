@@ -14,7 +14,8 @@ module EmpfinRequestForm
 
     def okta_heavy_lifting(ctx:)
       #ctx.visit 'https://sn.nd.edu'
-      ctx.visit 'https://ndtest.service-now.com'
+      #ctx.visit 'https://ndtest.service-now.com'
+      ctx.visit EmpfinRequestForm::SERVICENOW_SITE_URL
       ctx.find('#okta-signin-username').set(username)
       ctx.find('#okta-signin-password').set(password)
 
