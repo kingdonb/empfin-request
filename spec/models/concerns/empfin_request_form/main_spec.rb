@@ -52,7 +52,32 @@ RSpec.describe EmpfinRequestForm::Main do
       end
 
       describe "#main_loop" do
-        it 'pending' do
+        let(:l) { double('login_handle') }
+        let(:o) { [{o: double('o'), req_id: 'REQ123'}] }
+        let(:t) { [{short_description: 'CC: abc -  #123 xyz'}] }
+        let(:ctx) { double('ctx') }
+        let(:fillout) { double('fillout') }
+        let(:ritm_link) { l = double('link'); allow(l).to receive(:[]).with(:href).and_return 'http://foo'; l }
+        let(:task_link) { l = double('link'); allow(l).to receive(:[]).with(:href).and_return 'http://foo'; l }
+
+        it 'main loop hits a bunch of methods' do
+          subject.instance_variable_set(:@login_handle, l)
+          subject.instance_variable_set(:@o, o)
+          subject.instance_variable_set(:@t, t)
+          subject.instance_variable_set(:@ctx, ctx)
+          expect(EmpfinRequestForm::Fillout).to receive(:new).with(ctx: ctx, iframe: nil).and_return fillout
+          expect(fillout).to receive(:fill_out_1_with_row)
+          expect(fillout).to receive(:submit_1)
+          expect(fillout).to receive(:follow_req_link)
+          expect(fillout).to receive(:find_ritm_number).and_return([ritm_link, 'RITM1234'])
+          expect(ritm_link).to receive(:click)
+          expect(fillout).to receive(:find_task_number).and_return([task_link, 'TASK1234'])
+          expect(task_link).to receive(:click)
+          expect(fillout).to receive(:fill_out_2_with_row)
+          expect(fillout).to receive(:submit_2)
+          expect(EmpfinRequestForm::CsvWriter).to receive(:to_csv)
+          expect(l).to receive(:visit_request_url).with(ctx: ctx)
+
           subject.send(:main_loop)
         end
       end

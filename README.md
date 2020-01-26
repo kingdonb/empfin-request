@@ -1,6 +1,7 @@
 # README - empfin-request automation
 
 [![Build Status](https://travis-ci.org/kingdonb/empfin-request.svg?branch=master)](https://travis-ci.org/kingdonb/empfin-request)
+[![codecov](https://codecov.io/gh/kingdonb/empfin-request/branch/master/graph/badge.svg)](https://codecov.io/gh/kingdonb/empfin-request)
 
 * Ruby version - 
 
@@ -75,11 +76,7 @@ CC: Human Resources -  #1450 Workterra,Human Resources,1450,Workterra,REQ0046508
     The rake task depends on a live internet connection and the ServiceNow
     instance running at https://sn.nd.edu
 
-There are two places where "app_host" is set, in the source code at `test/test_helper.rb`:
-#  Capybara.app_host = 'https://sn.nd.edu'
-  Capybara.app_host = 'https://ndtest.service-now.com'
-
-and in the source code again at `app/models/concerns/empfin_request_form/constants.rb`:
+Visit the source code at `app/models/concerns/empfin_request_form/constants.rb` and change that file to set `production` mode:
 
 ```
 module EmpfinRequestForm::Constants
@@ -87,12 +84,11 @@ module EmpfinRequestForm::Constants
   EMPFIN_REQUEST_URL = 'https://ndtest.service-now.com/com.glideapp.servicecatalog_cat_item_view.do?v=1&sysparm_id=9f4426e6db403200de73f5161d96198d'
 ```
 
+Just comment/uncomment the part of the file that is labeled as testing/production.
 
-* Deployment instructions
+Also, please run the tests after making any changes:
 
 ```
-    The rake task is the totality of the program, and there is not any
-    deployment needed as this is a one-time operation.
+$ bundle exec rspec
 ```
 
-* ...
