@@ -31,17 +31,19 @@ RSpec.describe EmpfinRequestForm::Fillout do
         )
       end
     end
+
     describe 'fill out part two' do
+      let(:state) { double('state') }
+      let(:work_notes) { double('work_note') }
+      let(:description) { double('long_desc') }
+      let(:priority_order) { double('priority') }
+      let(:effort_hrs) { double('time_estimate') }
+      let(:what_delivered) { double('deliverables') }
+      let(:task_short_description) { double('desc') }
+      let(:business_application) { double('bus_service') }
+      let(:oit_resources_needed) { double('oit_resources') }
+
       it 'calls #fill_out_2 via #fill_out_2_with_row' do
-        task_short_description = double('desc')
-        description            = double('long_desc')
-        work_notes             = double('work_note')
-        business_application   = double('bus_service')
-        priority_order         = double('priority')
-        state                  = double('state')
-        oit_resources_needed   = double('oit_resources')
-        effort_hrs             = double('time_estimate')
-        what_delivered         = double('deliverables')
         row = { short_description: task_short_description,
                 long_description: description,
                 work_note: work_notes,
@@ -64,7 +66,29 @@ RSpec.describe EmpfinRequestForm::Fillout do
         )
         subject.fill_out_2_with_row(row)
       end
+      it 'body of fill_out_2' do
+        e = double('elem')
+        a = double('array')
+        allow(ctx).to receive(:find).and_return(e)
+        allow(e).to receive(:set)
+        allow(ctx).to receive(:all).and_return(a)
+        allow(a).to receive(:count).and_return(1)
+        allow(e).to receive(:click)
+        allow(e).to receive(:find).and_return(e)
+        allow(e).to receive(:select)
+        subject.fill_out_2(
+          task_short_description: task_short_description,
+          description: description, work_notes: work_notes,
+          business_service: business_application,
+          business_application_impacted: business_application,
+          priority_order: priority_order, state: state,
+          what_oit_resources_needed: oit_resources_needed,
+          what_do_i_estimate_my_effort_hrs: effort_hrs,
+          what_do_i_expect_to_be_delivered: what_delivered
+        )
+      end
     end
+
     describe 'submit part one' do
       let(:order_now) { double('order_now') }
       let(:request_link) { double('request_link') }
