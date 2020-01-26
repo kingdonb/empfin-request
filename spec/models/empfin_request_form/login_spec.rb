@@ -19,7 +19,7 @@ RSpec.describe EmpfinRequestForm::Login do
       expect(ctx).to receive(:find).with("#okta-signin-password").ordered.and_return(password_field)
       expect(username_field).to receive(:set)
       expect(password_field).to receive(:set)
-      expect(ctx).to receive(:find).with('div.navbar-header', text: "ServiceNow Home Page\nTEST", wait: 30).ordered
+      expect(ctx).to receive(:find).with('div.navbar-header', text: "Service Management", wait: 30).ordered
       expect(ctx).to receive(:visit).with(EmpfinRequestForm::EMPFIN_REQUEST_URL).ordered
 
       described_class.new(ctx: ctx)
