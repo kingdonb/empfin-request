@@ -1,5 +1,7 @@
 # README - empfin-request automation
 
+[![Build Status](https://travis-ci.org/kingdonb/empfin-request.svg?branch=master)](https://travis-ci.org/kingdonb/empfin-request)
+
 * Ruby version - 
 
 ```
