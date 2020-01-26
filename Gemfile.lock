@@ -72,6 +72,10 @@ GEM
       regexp_parser (~> 1.5)
       xpath (~> 3.2)
     childprocess (3.0.0)
+    codecov (0.1.16)
+      json
+      simplecov
+      url
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
     crass (1.0.6)
@@ -232,6 +236,7 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (1.2.6)
       thread_safe (~> 0.1)
+    url (0.3.2)
     web-console (4.0.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -259,6 +264,7 @@ DEPENDENCIES
   bootsnap
   byebug
   capybara
+  codecov
   dotenv
   guard
   guard-rspec (~> 4.7)
