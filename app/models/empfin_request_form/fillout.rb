@@ -172,16 +172,18 @@ module EmpfinRequestForm
     end
     def assign_user(val)
       #ctx.within_frame(iframe) do
-      ctx.find(ASSIGN_USER).set(val)
+      if val.present?
+        ctx.find(ASSIGN_USER).set(val)
 
-      unless ctx.all('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
-          text: val).count == 1
-        puts "User to assign to: #{val}"
-        # Please click the user to assign
-        binding.pry
-      else
-        ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
-                 text: val).click
+        unless ctx.all('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+            text: val).count == 1
+          puts "User to assign to: #{val}"
+          # Please click the user to assign
+          binding.pry
+        else
+          ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)',
+                   text: val).click
+        end
       end
       #end
     end
