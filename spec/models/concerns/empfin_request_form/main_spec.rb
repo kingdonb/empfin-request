@@ -54,7 +54,7 @@ RSpec.describe EmpfinRequestForm::Main do
       describe "#main_loop" do
         let(:l) { double('login_handle') }
         let(:o) { [{o: double('o'), req_id: 'REQ123'}] }
-        let(:t) { [{short_description: 'CC: abc -  #123 xyz'}] }
+        let(:t) { [{short_description: 'CC: abc - Priority: ? - #123 xyz'}] }
         let(:ctx) { double('ctx') }
         let(:fillout) { double('fillout') }
         let(:ritm_link) { l = double('link'); allow(l).to receive(:[]).with(:href).and_return 'http://foo'; l }
