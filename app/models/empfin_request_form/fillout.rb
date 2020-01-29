@@ -13,6 +13,8 @@ module EmpfinRequestForm
     TASK_SHORT_DESCRIPTION =
       'input[id="sc_task.short_description"]'
     TASK_DESCRIPTION =
+      'textarea[id="sc_task.description"]'
+    WORK_NOTES =
       'textarea[id="activity-stream-textarea"]'
     TASK_BUSINESS_SERVICE =
       'input[id="sys_display.sc_task.business_service"]'
@@ -77,6 +79,8 @@ module EmpfinRequestForm
       else
         ctx.find('tr td.ac_cell:not(.ac_additional):not(.ac_additional_repeat)', text: business_service).click
       end
+
+      ctx.find(WORK_NOTES).set(work_notes)
 
       ctx.find('span.sn-tooltip-basic', text: 'What Business Application is impacted?').
         find(:xpath, "./ancestor::div[contains(concat(' ', @class, ' '), ' form-group ')][1]").
