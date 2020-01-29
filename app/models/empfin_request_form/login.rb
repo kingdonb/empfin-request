@@ -9,6 +9,10 @@ module EmpfinRequestForm
       visit_request_url(ctx: ctx)
     end
 
+    def visit_request_url(ctx:)
+      ctx.visit EmpfinRequestForm::EMPFIN_REQUEST_URL
+    end
+
     private
     attr_accessor :login_config
 
@@ -21,10 +25,6 @@ module EmpfinRequestForm
 
       ctx.find('div.navbar-header',
                text: EmpfinRequestForm::SERVICENOW_HOME_PAGE_STRING, wait: 30)
-    end
-
-    def visit_request_url(ctx:)
-      ctx.visit EmpfinRequestForm::EMPFIN_REQUEST_URL
     end
 
     delegate :username, :password, to: :login_config
