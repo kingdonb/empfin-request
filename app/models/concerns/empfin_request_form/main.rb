@@ -65,10 +65,10 @@ module EmpfinRequestForm
                           :ritm_url=>"",
                           :task_url=>""}
 
-            r = /^CC: (.*) -  #(\d+) (.*)$/
+            r = /^CC: (.*) - Priority: (.*) - #(\d+) (.*)$/
             m = r.match(short_description)
 
-            on_behalf_of_department, original_id, business_application = m[1], m[2], m[3]
+            on_behalf_of_department, priority, original_id, business_application = m[1], m[2], m[3], m[4]
             output_row[:on_behalf_of_department] = on_behalf_of_department
             output_row[:original_id]             = original_id
             output_row[:business_application]    = business_application
