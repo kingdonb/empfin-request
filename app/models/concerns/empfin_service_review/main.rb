@@ -12,9 +12,9 @@ module EmpfinServiceReview
     def run
       do_login
       validate_login_destination
-      # setup_csv_context
+      setup_csv_context
 
-      # main_loop
+      main_loop
     end
 
     private
