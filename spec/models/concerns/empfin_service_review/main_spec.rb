@@ -42,10 +42,11 @@ RSpec.describe EmpfinServiceReview::Main do
         let(:o) { double('o') }
         let(:s) { double('s') }
         let(:t) { double('t') }
+        let(:options) { {:col_sep=>",", :row_sep=>"\n"} }
 
         it 'sets up "o", "s", and "t" according to the plan' do
-          expect(SmarterCSV).to receive(:process).with('output-srv-file.csv').ordered.and_return(o)
-          expect(SmarterCSV).to receive(:process).with('orig-srv-file.csv').ordered.and_return(s)
+          expect(SmarterCSV).to receive(:process).with('output-srv-file.csv', options).ordered.and_return(o)
+          expect(SmarterCSV).to receive(:process).with('orig-srv-file.csv', options).ordered.and_return(s)
           expect(EmpfinServiceReview::RowReader).to receive(:filter_orig_by_output).with(orig: s, output: o).and_return(t)
 
           subject.send(:setup_csv_context)

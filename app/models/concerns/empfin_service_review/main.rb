@@ -35,12 +35,14 @@ module EmpfinServiceReview
     attr_reader :o, :s, :t
 
     def setup_csv_context
+      options = { row_sep: "\n", col_sep: "," }
+      # options = {}
       begin
-        @o = SmarterCSV.process('output-srv-file.csv')
+        @o = SmarterCSV.process('output-srv-file.csv', options)
       rescue EOFError => e
         @o = []
       end
-      @s = SmarterCSV.process('orig-srv-file.csv')
+      @s = SmarterCSV.process('orig-srv-file.csv', options)
 
       @t = EmpfinServiceReview::RowReader.filter_orig_by_output(orig: s, output: o)
     end
