@@ -1,5 +1,5 @@
 module EmpfinServiceReview
   include Constants
   #include CsvWriter
-  #include RowReader
+  include RowReader
 end
