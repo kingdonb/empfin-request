@@ -2,6 +2,8 @@ require 'smarter_csv'
 
 module EmpfinServiceReview
   class Main
+    include Support
+
     attr_reader :ctx
 
     def initialize(ctx:)
@@ -30,10 +32,6 @@ module EmpfinServiceReview
       clear_search.click
       ctx.find('h2.navbar-title.list_title', text: 'Business Applications')
       search_input
-    end
-
-    def search_input
-      ctx.find('input[placeholder="Search"]')
     end
 
     attr_reader :o, :s, :t
@@ -77,11 +75,10 @@ module EmpfinServiceReview
             o << output_row
           end
 
-          search_input.set(name)
-          search_input.native.send_keys(:return)
-          ctx.find("a[aria-label=\"Open record: #{name}\"]").click
-          name_input = ctx.find('input[aria-label="Name"]')
-          name_input.value == name || flunk("Business Application Name did not match after the link was clicked")
+          # methods defined in Support module:
+          search_for(name)
+          open_record(name, ctx: ctx)
+          arrive_at_business_record(name, ctx: ctx)
 
           binding.pry
           flunk("the code below is from EmpfinRequestForm and must be adapted")

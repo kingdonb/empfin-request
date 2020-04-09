@@ -69,6 +69,9 @@ RSpec.describe EmpfinServiceReview::Main do
           subject.instance_variable_set(:@o, o)
           subject.instance_variable_set(:@t, t)
           subject.instance_variable_set(:@ctx, ctx)
+          expect(subject).to receive(:search_for)
+          expect(subject).to receive(:open_record)
+          expect(subject).to receive(:arrive_at_business_record)
           # expect(EmpfinServiceReview::Fillout).to receive(:new).with(ctx: ctx, iframe: nil).and_return fillout
           # expect(fillout).to receive(:fill_out_1_with_row)
           # expect(fillout).to receive(:submit_1)
