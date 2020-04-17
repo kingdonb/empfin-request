@@ -5,17 +5,14 @@ module EmpfinServiceReview::Support
 
   def search_for(name)
     input = search_input
-    # binding.pry
     clear_search = ctx.find('a[aria-label="Remove next condition Keywords = alphasense"]')
     clear_search.click
-    # binding.pry
     input.set(name)
     input.native.send_keys(:return)
   end
 
   def open_record(name, ctx:)
     selector = "a[aria-label=\"Open record: #{name}\"]"
-    # binding.pry
     if ctx.has_selector?(selector)
       ctx.find(selector).click
     else
@@ -24,7 +21,9 @@ module EmpfinServiceReview::Support
   end
 
   def arrive_at_business_record(name, ctx:)
-    name_input = ctx.find('input[aria-label="Name"]')
+    selector = 'input[aria-label="Name"]'
+    binding.pry unless ctx.has_selector?(selector)
+    name_input = ctx.find(selector)
     name_input.value == name || flunk("Business Application Name did not match after the link was clicked")
   end
 
@@ -56,7 +55,6 @@ module EmpfinServiceReview::Support
       if orig_row_value == output_value
         puts orig_row_value + "==" + output_value
 
-        # binding.pry
       else
         # puts orig_row_value + "!=" + output_value
         if output_value.present?
@@ -65,8 +63,8 @@ module EmpfinServiceReview::Support
           output_row[field_key] = '[BLANK]'
         end
 
+        binding.pry
         output_row[:everything_matches] = 'false'
-        # binding.pry
       end
     end
   end

@@ -75,6 +75,8 @@ module EmpfinServiceReview
             o << output_row
           end
 
+          unless output_row[:already_compared] == "X"
+            login_handle.visit_request_url(ctx: ctx)
           # methods defined in Support module:
           search_for(name)
           open_record(name, ctx: ctx)
@@ -85,6 +87,7 @@ module EmpfinServiceReview
             business_app_name: name, ctx: ctx)
 
 
+          end
 
 
         ensure
@@ -92,7 +95,6 @@ module EmpfinServiceReview
           # write "o" back out to the file it came from
         end
 
-        login_handle.visit_request_url(ctx: ctx)
 
       end
       ## end "t.each"
