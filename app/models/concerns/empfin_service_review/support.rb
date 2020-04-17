@@ -20,11 +20,13 @@ module EmpfinServiceReview::Support
     end
   end
 
-  def arrive_at_business_record(name, ctx:)
+  def arrive_at_business_record(name, ctx:, output_row:)
     selector = 'input[aria-label="Name"]'
     binding.pry unless ctx.has_selector?(selector)
     name_input = ctx.find(selector)
     name_input.value == name || flunk("Business Application Name did not match after the link was clicked")
+    url = URI.parse(ctx.current_url)
+    output_row[:url] = url.to_s
   end
 
   # output should show the live "original data" from ServiceNow that differs
@@ -45,10 +47,14 @@ module EmpfinServiceReview::Support
       :"secondary_support_(person)"           => 'input[id="cmdb_ci_business_app.u_supported_by_secondary_label"]'
     }
 
+    output_row[:everything_matches] = nil
     field_mapping.keys.each do |field_key|
+      # (check again)
       puts field_key
 
       orig_row_value = orig_row[field_key]
+      # binding.pry
+
       if field_key == :lifecycle_status
         entry_widget = ctx.find(field_mapping[field_key], visible: false)
         code_value = entry_widget.value
@@ -56,13 +62,28 @@ module EmpfinServiceReview::Support
       else
         output_value = ctx.find(field_mapping[field_key], visible: false).value
       end
+      # binding.pry
+      [orig_row_value, output_value]
+      puts [orig_row_value, output_value]
 
       if orig_row_value == output_value
         # puts orig_row_value + "==" + output_value
-        # output_row[field_key] = ''
+        if output_row.key?(field_key)
+          # clear the value in the output field if the data matches
+          # (unless it's name, include that because it is the key)
+          if field_key == :name
+            output_row[field_key] = output_value
+          else
+            output_row[field_key] = ''
+          end
+        else
+          # do not add the key to a row when it was not present before
+        end
+        # binding.pry
 
       elsif orig_row_value.blank? && output_value.blank?
         # both are blank, no change needed
+        # binding.pry
 
       else
         # puts orig_row_value + "!=" + output_value
@@ -72,9 +93,10 @@ module EmpfinServiceReview::Support
           output_row[field_key] = '[BLANK]'
         end
 
-        # binding.pry
         output_row[:everything_matches] = 'false'
       end
+      # binding.pry
     end
+
   end
 end

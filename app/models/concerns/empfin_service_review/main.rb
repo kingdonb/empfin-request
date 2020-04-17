@@ -59,10 +59,11 @@ module EmpfinServiceReview
 
           if output_row.present?
             # we have a work in progress output row
+            # binding.pry
           else
             output_row = {:name=>name,
+                          :already_compared=>'no',
                           :everything_matches=>nil,
-                          :already_compared=>'',
                           :url=>""}
 
             # r = /^CC: (.*) - Priority: (.*) - #(\d+) (.*)$/
@@ -77,20 +78,31 @@ module EmpfinServiceReview
           end
 
           unless output_row[:already_compared] == "X"
-            login_handle.visit_request_url(ctx: ctx)
-          # methods defined in Support module:
-          search_for(name)
-          open_record(name, ctx: ctx)
-          arrive_at_business_record(name, ctx: ctx)
+            if output_row[:url].present?
+              ctx.visit(output_row[:url])
+            else
+              login_handle.visit_request_url(ctx: ctx)
+              # methods defined in Support module:
+              search_for(name)
+              open_record(name, ctx: ctx)
+            end
 
-          compare_shown_business_service_with_orig_srv_and_update_output(
-            orig_row: row, output_row: output_row,
-            business_app_name: name, ctx: ctx)
+            arrive_at_business_record(name, ctx: ctx, output_row: output_row)
 
+            # the business happens in here:
+            compare_shown_business_service_with_orig_srv_and_update_output(
+              orig_row: row, output_row: output_row,
+              business_app_name: name, ctx: ctx)
+
+            if output_row[:everything_matches].blank?
+              output_row[:everything_matches] = true
+            end
+            # binding.pry
+
+            output_row[:already_compared] = 'X'
 
           end
 
-          output_row[:already_compared] = 'X'
 
         ensure
           EmpfinServiceReview::CsvWriter.to_csv(input_array: o, csv_filename: 'output-srv-file.csv')
