@@ -28,8 +28,8 @@ module EmpfinServiceReview
     end
 
     def validate_login_destination
-      clear_search = ctx.find('a[aria-label="Remove next condition Keywords = alphasense"]')
-      clear_search.click
+      # clear_search = ctx.find('a[aria-label="Remove next condition Keywords = alphasense"]')
+      # clear_search.click
       ctx.find('h2.navbar-title.list_title', text: 'Business Applications')
       search_input
     end
@@ -80,44 +80,12 @@ module EmpfinServiceReview
           open_record(name, ctx: ctx)
           arrive_at_business_record(name, ctx: ctx)
 
-          binding.pry
-          flunk("the code below is from EmpfinRequestForm and must be adapted")
-          f = EmpfinServiceReview::Fillout.
-            new(ctx: ctx, iframe: nil) # There is no iframe now! cool
+          compare_shown_business_service_with_orig_srv_and_update_output(
+            orig_row: row, output_row: output_row,
+            business_app_name: name, ctx: ctx)
 
-          if output_row[:req_id].present?
-            req_no = output_row[:req_id]
-            output_req_url = EmpfinServiceReview::RowReader.get_url_by_req_id(output: o, req_id: req_no)
-          end
 
-          if output_req_url.present?
-            ctx.visit output_req_url
-            req_link_url = output_req_url
-          else
-            f.fill_out_1_with_row(row)
-            # When submit returns, you either have obtained a req_no or failure
-            req_no = f.submit_1
-            req_link_url = f.follow_req_link(req_no)
-          end
 
-          output_row[:req_id]  = req_no
-          output_row[:req_url] = req_link_url
-
-          # Following the request link should lead you to a RITM with a single TASK
-          ritm_link, ritm_no = f.find_ritm_number
-          output_row[:ritm_url] = ritm_link[:href]
-          ritm_link.click
-
-          # TASK contains everything important from here on, the RITM is not important
-          task_link, task_no = f.find_task_number
-          output_row[:task_url] = task_link[:href]
-          task_link.click
-
-          f.fill_out_2_with_row(row)
-          f.submit_2
-
-          output_row[:ritm_id] = ritm_no
-          output_row[:task_id] = task_no
 
         ensure
           EmpfinServiceReview::CsvWriter.to_csv(input_array: o, csv_filename: 'output-srv-file.csv')
