@@ -13,8 +13,11 @@ module EmpfinServiceReview::Support
 
   def open_record(name, ctx:)
     selector = "a[aria-label=\"Open record: #{name}\"]"
+    backup_selector = "a[aria-label=\"#{name[0..39]}... - Open record: #{name}\"]"
     if ctx.has_selector?(selector)
       ctx.find(selector).click
+    elsif ctx.has_selector?(backup_selector)
+      ctx.find(backup_selector).click
     else
       binding.pry
     end
