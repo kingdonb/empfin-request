@@ -62,6 +62,7 @@ module EmpfinServiceReview
           else
             output_row = {:name=>name,
                           :everything_matches=>nil,
+                          :already_compared=>'',
                           :url=>""}
 
             # r = /^CC: (.*) - Priority: (.*) - #(\d+) (.*)$/
@@ -89,6 +90,7 @@ module EmpfinServiceReview
 
           end
 
+          output_row[:already_compared] = 'X'
 
         ensure
           EmpfinServiceReview::CsvWriter.to_csv(input_array: o, csv_filename: 'output-srv-file.csv')

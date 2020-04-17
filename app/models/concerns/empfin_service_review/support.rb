@@ -37,7 +37,7 @@ module EmpfinServiceReview::Support
       :alias                                  => 'input[id="sys_readonly.cmdb_ci_business_app.u_alias"]',
       :description                            => 'textarea[id="sys_readonly.cmdb_ci_business_app.short_description"]',
       :application_url                        => 'input[id="sys_original.cmdb_ci_business_app.url"]',
-      :support_group_service_offering_manager => 'input[id="cmdb_ci_business_app.owned_by_label"]',
+      :support_group_service_offering_manager => 'input[id="cmdb_ci_business_app.support_group_label"]',
       :supported_by                           => 'input[id="cmdb_ci_business_app.supported_by_label"]',
       :service_classification                 => 'select[id="sys_readonly.cmdb_ci_business_app.u_service_classification"]',
       :lifecycle_status                       => 'select[id="sys_readonly.cmdb_ci_business_app.install_status"]',
@@ -49,11 +49,20 @@ module EmpfinServiceReview::Support
       puts field_key
 
       orig_row_value = orig_row[field_key]
-      # binding.pry if field_key == :lifecycle_status
-      output_value = ctx.find(field_mapping[field_key], visible: false).value
+      if field_key == :lifecycle_status
+        entry_widget = ctx.find(field_mapping[field_key], visible: false)
+        code_value = entry_widget.value
+        output_value = entry_widget.find("option[value=\"#{code_value}\"]").text
+      else
+        output_value = ctx.find(field_mapping[field_key], visible: false).value
+      end
 
       if orig_row_value == output_value
-        puts orig_row_value + "==" + output_value
+        # puts orig_row_value + "==" + output_value
+        # output_row[field_key] = ''
+
+      elsif orig_row_value.blank? && output_value.blank?
+        # both are blank, no change needed
 
       else
         # puts orig_row_value + "!=" + output_value
@@ -63,7 +72,7 @@ module EmpfinServiceReview::Support
           output_row[field_key] = '[BLANK]'
         end
 
-        binding.pry
+        # binding.pry
         output_row[:everything_matches] = 'false'
       end
     end
