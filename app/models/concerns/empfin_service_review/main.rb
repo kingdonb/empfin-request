@@ -64,6 +64,15 @@ module EmpfinServiceReview
             output_row = {:name=>name,
                           :already_compared=>'no',
                           :everything_matches=>nil,
+                          :alias                                  => '' ,
+                          :description                            => '' ,
+                          :application_url                        => '' ,
+                          :support_group_service_offering_manager => '' ,
+                          :supported_by                           => '' ,
+                          :service_classification                 => '' ,
+                          :lifecycle_status                       => '' ,
+                          :"primary_support_(person)"             => '' ,
+                          :"secondary_support_(person)"           => '' ,
                           :url=>""}
 
             # r = /^CC: (.*) - Priority: (.*) - #(\d+) (.*)$/
@@ -102,7 +111,6 @@ module EmpfinServiceReview
             output_row[:already_compared] = 'X'
 
           end
-
 
         ensure
           EmpfinServiceReview::CsvWriter.to_csv(input_array: o, csv_filename: 'output-srv-file.csv')

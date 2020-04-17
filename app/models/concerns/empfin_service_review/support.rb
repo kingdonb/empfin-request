@@ -53,7 +53,7 @@ module EmpfinServiceReview::Support
     output_row[:everything_matches] = nil
     field_mapping.keys.each do |field_key|
       # (check again)
-      puts field_key
+      # puts field_key
 
       orig_row_value = orig_row[field_key]
       # binding.pry
@@ -67,7 +67,7 @@ module EmpfinServiceReview::Support
       end
       # binding.pry
       [orig_row_value, output_value]
-      puts [orig_row_value, output_value]
+      # puts [orig_row_value, output_value]
 
       if orig_row_value == output_value
         # puts orig_row_value + "==" + output_value
@@ -77,7 +77,7 @@ module EmpfinServiceReview::Support
           if field_key == :name
             output_row[field_key] = output_value
           else
-            output_row[field_key] = ''
+            output_row[field_key] = '.'
           end
         else
           # do not add the key to a row when it was not present before
