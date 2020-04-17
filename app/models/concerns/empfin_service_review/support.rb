@@ -89,11 +89,16 @@ module EmpfinServiceReview::Support
         # binding.pry
 
       else
-        # puts orig_row_value + "!=" + output_value
-        if output_value.present?
-          output_row[field_key] = output_value
+        # # puts orig_row_value + "!=" + output_value
+        # if output_value.present?
+        #   output_row[field_key] = output_value
+        # else
+        #   output_row[field_key] = '[BLANK]'
+        # end
+        if orig_row_value.present?
+          output_row[field_key] = orig_row_value
         else
-          output_row[field_key] = '[BLANK]'
+          output_row[field_key] = '[BLANK IN SPREADSHEET]'
         end
 
         output_row[:everything_matches] = 'false'
