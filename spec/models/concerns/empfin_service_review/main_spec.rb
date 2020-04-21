@@ -30,8 +30,8 @@ RSpec.describe EmpfinServiceReview::Main do
 
       describe "#validate_login_destination" do
         it 'looks for an item_table and the text Customer Care Request' do
-          expect(ctx).to receive(:find).with('a[aria-label="Remove next condition Keywords = alphasense"]').ordered.and_return(clear_search)
-          expect(clear_search).to receive(:click)
+          # expect(ctx).to receive(:find).with('a[aria-label="Remove next condition Keywords = alphasense"]').ordered.and_return(clear_search)
+          # expect(clear_search).to receive(:click)
           expect(ctx).to receive(:find).with('h2.navbar-title.list_title', text: 'Business Applications').ordered
           expect(ctx).to receive(:find).with('input[placeholder="Search"]').ordered
           subject.send(:validate_login_destination)
@@ -84,6 +84,8 @@ RSpec.describe EmpfinServiceReview::Main do
           # expect(fillout).to receive(:submit_2)
           # expect(EmpfinServiceReview::CsvWriter).to receive(:to_csv)
           expect(l).to receive(:visit_request_url).with(ctx: ctx)
+          expect(subject).to receive(:compare_shown_business_service_with_orig_srv_and_update_output)
+            .at_least(:once)
 
           subject.send(:main_loop)
         end
