@@ -6,7 +6,7 @@ RSpec.describe EmpfinServiceReview::CsvWriter do
     let(:scratch_filename) { 'scratch-file.csv' }
     describe '#to_csv' do
       it 'writes a CSV' do
-        expect(CSV).to receive(:open).with(scratch_filename, 'wb').and_call_original
+        expect(CSV).to receive(:open).with(scratch_filename, 'wb', {:col_sep=>",", :row_sep=>"\n"}).and_call_original
         described_class.to_csv(input_array: input_array)
 
         txt = File.read(scratch_filename)
