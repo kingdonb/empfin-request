@@ -3,7 +3,8 @@ require "csv"
 module EmpfinServiceReview::CsvWriter
   module_function
   def to_csv(input_array:, csv_filename: "scratch-file.csv")
-    CSV.open(csv_filename, "wb") do |csv|
+    CSV.open(csv_filename, "wb", row_sep: "\n", col_sep: ",") do |csv|
+#    CSV.open(csv_filename, "wb") do |csv|
       keys = input_array.first.keys
       # header_row
       csv << keys
