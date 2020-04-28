@@ -87,6 +87,17 @@ module EmpfinServiceReview::Support
     end
   end
 
+  def visit_business_record_url_and_log_url_in_output(output_row:, name:, ctx:)
+    if output_row[:url].present?
+      ctx.visit(output_row[:url])
+    else
+      login_handle.visit_request_url(ctx: ctx)
+      # methods defined in Support module:
+      search_for(name)
+      open_record(name, ctx: ctx)
+    end
+  end
+
   # output should show the live "original data" from ServiceNow that differs
   # from what we have in the "orig-srv-file.csv" file
   def compare_shown_business_service_with_orig_srv_and_update_output(
