@@ -19,7 +19,7 @@ module EmpfinServiceReview::Support
     elsif ctx.has_selector?(backup_selector)
       ctx.find(backup_selector).click
     else
-      binding.pry
+      raise RecordNotFoundInBusinessAppSearch, "'#{name}' was not returned as an exact match in the search."
     end
   end
 
@@ -30,6 +30,61 @@ module EmpfinServiceReview::Support
     name_input.value == name || flunk("Business Application Name did not match after the link was clicked")
     url = URI.parse(ctx.current_url)
     output_row[:url] = url.to_s
+  end
+
+  def fetch_or_insert_output_row_from_o(o:, name:)
+    output_row = EmpfinServiceReview::RowReader.get_row_by_name(output: o, name: name)
+
+    if output_row.present?
+      # we have a work in progress output row
+      # binding.pry
+    else
+      output_row = {:name=>name,
+                    :already_compared=>'no',
+                    :everything_matches=>nil,
+                    :alias                                  => '' ,
+                    :description                            => '' ,
+                    :application_url                        => '' ,
+                    :support_group_service_offering_manager => '' ,
+                    :supported_by                           => '' ,
+                    :service_classification                 => '' ,
+                    :lifecycle_status                       => '' ,
+                    :"primary_support_(person)"             => '' ,
+                    :"secondary_support_(person)"           => '' ,
+                    :url=>""}
+
+      # r = /^CC: (.*) - Priority: (.*) - #(\d+) (.*)$/
+      # m = r.match(short_description)
+
+      # on_behalf_of_department, priority, original_id, business_application = m[1], m[2], m[3], m[4]
+      # output_row[:on_behalf_of_department] = on_behalf_of_department
+      # output_row[:original_id]             = original_id
+      # output_row[:business_application]    = business_application
+
+      o << output_row
+    end
+
+    output_row
+  end
+
+  def perform_row_comparison_unless_marked_already_compared(row:, output_row:, name:, ctx:)
+    unless output_row[:already_compared] == "X"
+      visit_business_record_url_and_log_url_in_output(
+        output_row: output_row, name: name, ctx: ctx)
+      arrive_at_business_record(name, ctx: ctx, output_row: output_row)
+
+      # the business happens in here:
+      compare_shown_business_service_with_orig_srv_and_update_output(
+        orig_row: row, output_row: output_row,
+        business_app_name: name, ctx: ctx)
+
+      if output_row[:everything_matches].blank?
+        output_row[:everything_matches] = true
+      end
+      # binding.pry
+
+      output_row[:already_compared] = 'X'
+    end
   end
 
   # output should show the live "original data" from ServiceNow that differs
