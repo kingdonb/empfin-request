@@ -53,6 +53,7 @@ module EmpfinServiceReview::Support
                     :lifecycle_status                       => '',
                     :"primary_support_(person)"             => '',
                     :"secondary_support_(person)"           => '',
+                    :guidance_council                       => '',
                     :url                                    => '',
                     :requesturl                             => ''
       }
@@ -166,7 +167,7 @@ module EmpfinServiceReview::Support
       elsif orig_row_value.blank? && output_value.blank?
         # both are blank, no change needed
         # binding.pry
-
+          output_row[field_key] = '[BLANK]'
       else
         # # puts orig_row_value + "!=" + output_value
         # if output_value.present?

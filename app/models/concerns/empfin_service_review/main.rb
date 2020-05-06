@@ -52,7 +52,7 @@ module EmpfinServiceReview
     def main_loop
 
       do_prepare_part
-      # do_update_part
+      do_update_part
 
     end
 
