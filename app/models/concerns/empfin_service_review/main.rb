@@ -50,74 +50,39 @@ module EmpfinServiceReview
     end
 
     def main_loop
+      # read and prepare to reconcile
       t.each do |row|
         begin ## "t.each"
-
           name = row[:name]
 
-          output_row = EmpfinServiceReview::RowReader.get_row_by_name(output: o, name: name)
+          output_row = fetch_or_insert_output_row_from_o(o: o, name: name)
 
-          if output_row.present?
-            # we have a work in progress output row
-            # binding.pry
-          else
-            output_row = {:name=>name,
-                          :already_compared=>'no',
-                          :everything_matches=>nil,
-                          :alias                                  => '' ,
-                          :description                            => '' ,
-                          :application_url                        => '' ,
-                          :support_group_service_offering_manager => '' ,
-                          :supported_by                           => '' ,
-                          :service_classification                 => '' ,
-                          :lifecycle_status                       => '' ,
-                          :"primary_support_(person)"             => '' ,
-                          :"secondary_support_(person)"           => '' ,
-                          :url=>""}
-
-            # r = /^CC: (.*) - Priority: (.*) - #(\d+) (.*)$/
-            # m = r.match(short_description)
-
-            # on_behalf_of_department, priority, original_id, business_application = m[1], m[2], m[3], m[4]
-            # output_row[:on_behalf_of_department] = on_behalf_of_department
-            # output_row[:original_id]             = original_id
-            # output_row[:business_application]    = business_application
-
-            o << output_row
-          end
-
-          unless output_row[:already_compared] == "X"
-            if output_row[:url].present?
-              ctx.visit(output_row[:url])
-            else
-              login_handle.visit_request_url(ctx: ctx)
-              # methods defined in Support module:
-              search_for(name)
-              open_record(name, ctx: ctx)
-            end
-
-            arrive_at_business_record(name, ctx: ctx, output_row: output_row)
-
-            # the business happens in here:
-            compare_shown_business_service_with_orig_srv_and_update_output(
-              orig_row: row, output_row: output_row,
-              business_app_name: name, ctx: ctx)
-
-            if output_row[:everything_matches].blank?
-              output_row[:everything_matches] = true
-            end
-            # binding.pry
-
-            output_row[:already_compared] = 'X'
-
-          end
-
+          perform_row_comparison_unless_marked_already_compared(
+            row: row, output_row: output_row, name: name, ctx: ctx
+          )
+        rescue RecordNotFoundInBusinessAppSearch => e
+          output_row[:already_compared] = 'missing'
         ensure
           EmpfinServiceReview::CsvWriter.to_csv(input_array: o, csv_filename: 'output-srv-file.csv')
           # write "o" back out to the file it came from
         end
+      end
 
+      # submit any updates to rows which were found to have changes needed, and
+      # mark them as completed
+      t.each do |row|
+        begin
+          name = row[:name]
 
+          output_row = fetch_or_insert_output_row_from_o(o: o, name: name)
+
+          perform_record_update_from_output_row_if_needed(
+            row: row, output_row: output_row, name: name, ctx: ctx
+          )
+          output_row[:finalized] = 'X'
+        ensure
+          EmpfinServiceReview::CsvWriter.to_csv(input_array: o, csv_filename: 'output-srv-file.csv')
+        end
       end
       ## end "t.each"
 
