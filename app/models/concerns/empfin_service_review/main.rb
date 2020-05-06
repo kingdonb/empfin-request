@@ -50,6 +50,13 @@ module EmpfinServiceReview
     end
 
     def main_loop
+
+      do_prepare_part
+      # do_update_part
+
+    end
+
+    def do_prepare_part
       # read and prepare to reconcile
       t.each do |row|
         begin ## "t.each"
@@ -67,7 +74,9 @@ module EmpfinServiceReview
           # write "o" back out to the file it came from
         end
       end
+    end
 
+    def do_update_part
       # submit any updates to rows which were found to have changes needed, and
       # mark them as completed
       t.each do |row|
@@ -85,7 +94,6 @@ module EmpfinServiceReview
         end
       end
       ## end "t.each"
-
     end
   end
 end
