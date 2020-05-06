@@ -30,8 +30,8 @@ RSpec.describe EmpfinServiceReview::Main do
 
       describe "#validate_login_destination" do
         it 'looks for an item_table and the text Customer Care Request' do
-          expect(ctx).to receive(:find).with('a[aria-label="Remove next condition Keywords = alphasense"]').ordered.and_return(clear_search)
-          expect(clear_search).to receive(:click)
+          # expect(ctx).to receive(:find).with('a[aria-label="Remove next condition Keywords = alphasense"]').ordered.and_return(clear_search)
+          # expect(clear_search).to receive(:click)
           expect(ctx).to receive(:find).with('h2.navbar-title.list_title', text: 'Business Applications').ordered
           expect(ctx).to receive(:find).with('input[placeholder="Search"]').ordered
           subject.send(:validate_login_destination)
@@ -42,10 +42,11 @@ RSpec.describe EmpfinServiceReview::Main do
         let(:o) { double('o') }
         let(:s) { double('s') }
         let(:t) { double('t') }
+        let(:options) { {:col_sep=>",", :row_sep=>"\n"} }
 
         it 'sets up "o", "s", and "t" according to the plan' do
-          expect(SmarterCSV).to receive(:process).with('output-srv-file.csv').ordered.and_return(o)
-          expect(SmarterCSV).to receive(:process).with('orig-srv-file.csv').ordered.and_return(s)
+          expect(SmarterCSV).to receive(:process).with('output-srv-file.csv', options).ordered.and_return(o)
+          expect(SmarterCSV).to receive(:process).with('orig-srv-file.csv', options).ordered.and_return(s)
           expect(EmpfinServiceReview::RowReader).to receive(:filter_orig_by_output).with(orig: s, output: o).and_return(t)
 
           subject.send(:setup_csv_context)
@@ -68,18 +69,13 @@ RSpec.describe EmpfinServiceReview::Main do
           subject.instance_variable_set(:@o, o)
           subject.instance_variable_set(:@t, t)
           subject.instance_variable_set(:@ctx, ctx)
-          # expect(EmpfinServiceReview::Fillout).to receive(:new).with(ctx: ctx, iframe: nil).and_return fillout
-          # expect(fillout).to receive(:fill_out_1_with_row)
-          # expect(fillout).to receive(:submit_1)
-          # expect(fillout).to receive(:follow_req_link)
-          # expect(fillout).to receive(:find_ritm_number).and_return([ritm_link, 'RITM1234'])
-          # expect(ritm_link).to receive(:click)
-          # expect(fillout).to receive(:find_task_number).and_return([task_link, 'TASK1234'])
-          # expect(task_link).to receive(:click)
-          # expect(fillout).to receive(:fill_out_2_with_row)
-          # expect(fillout).to receive(:submit_2)
-          # expect(EmpfinServiceReview::CsvWriter).to receive(:to_csv)
+          expect(subject).to receive(:search_for)
+          expect(subject).to receive(:open_record)
+          expect(subject).to receive(:arrive_at_business_record)
+          expect(EmpfinServiceReview::CsvWriter).to receive(:to_csv)
           expect(l).to receive(:visit_request_url).with(ctx: ctx)
+          expect(subject).to receive(:compare_shown_business_service_with_orig_srv_and_update_output)
+            .at_least(:once)
 
           subject.send(:main_loop)
         end
