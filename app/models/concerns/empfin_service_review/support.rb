@@ -46,6 +46,7 @@ module EmpfinServiceReview::Support
                     :alias                                  => '',
                     :description                            => '',
                     :application_url                        => '',
+                    :sn_service_offering_manager            => '',
                     :support_group_service_offering_manager => '',
                     :supported_by                           => '',
                     :service_classification                 => '',
@@ -111,6 +112,7 @@ module EmpfinServiceReview::Support
       :alias                                  => 'input[id="sys_readonly.cmdb_ci_business_app.u_alias"]',
       :description                            => 'textarea[id="sys_readonly.cmdb_ci_business_app.short_description"]',
       :application_url                        => 'input[id="sys_original.cmdb_ci_business_app.url"]',
+      :sn_service_offering_manager            => 'input[id="cmdb_ci_business_app.owned_by_label"]',
       :support_group_service_offering_manager => 'input[id="cmdb_ci_business_app.support_group_label"]',
       :supported_by                           => 'input[id="cmdb_ci_business_app.u_business_owner_label"]',
       :service_classification                 => 'select[id="sys_readonly.cmdb_ci_business_app.u_service_classification"]',
@@ -154,6 +156,13 @@ module EmpfinServiceReview::Support
         end
         # binding.pry
 
+      elsif field_key == :sn_service_offering_manager
+        output_row[field_key] = output_value
+      elsif field_key == :supported_by && output_value.present?
+        # do not overwrite "business owner" with "supported by" if it is already present here
+    #    binding.pry
+        output_row[field_key] = '.'
+
       elsif orig_row_value.blank? && output_value.blank?
         # both are blank, no change needed
         # binding.pry
@@ -167,11 +176,11 @@ module EmpfinServiceReview::Support
         # end
         if orig_row_value.present?
           output_row[field_key] = orig_row_value
+    #      binding.pry
+          output_row[:everything_matches] = 'false'
         else
-          output_row[field_key] = '[BLANK IN SPREADSHEET]'
+          output_row[field_key] = '[BLANK]'
         end
-
-        output_row[:everything_matches] = 'false'
       end
       # binding.pry
     end
@@ -216,14 +225,14 @@ module EmpfinServiceReview::Support
           :service_classification     => ['select[id="IO:adf4e0151b2fb740c81c64207e4bcbe6"]',
                                           'input[id="IO:e5f4e0151b2fb740c81c64207e4bcbdb"]'],
 
-          # "Service Offering Manager" - label in ServiceNow, must be a person
-          :"primary_support_(person)" => ['input[id="sys_display.IO:663b07ad1be73b40c81c64207e4bcb2c"]',
-                                          'input[id="sys_display.IO:cc7b87211b2b3b40c81c64207e4bcbcc"]'],
-
-          :business_owner             => ['input[id="sys_display.IO:152df85a1b2fbb40c81c64207e4bcbdf"]',
+          # "Service Offering Manager" - Business Owner
+          :supported_by               => ['input[id="sys_display.IO:152df85a1b2fbb40c81c64207e4bcbdf"]',
                                           'input[id="sys_display.IO:da8dbc9a1b2fbb40c81c64207e4bcb93"]'],
-          :supported_by               => ['input[id="sys_display.IO:0c34aaa51b673b40c81c64207e4bcb6e"]',
+
+          # "Supported By" - Primary Support Person
+          :"primary_support_(person)" => ['input[id="sys_display.IO:0c34aaa51b673b40c81c64207e4bcb6e"]',
                                           'input[id="sys_display.IO:e9f4e0151b2fb740c81c64207e4bcb95"]'],
+
         :"secondary_support_(person)" => ['input[id="sys_display.IO:3ffd745a1b2fbb40c81c64207e4bcb8c"]',
                                           'input[id="sys_display.IO:714efcda1b2fbb40c81c64207e4bcb5c"]'],
 :support_group_service_offering_manager => ['input[id="sys_display.IO:422f23351b40c4d0c81c64207e4bcb7a"]',
@@ -266,11 +275,14 @@ module EmpfinServiceReview::Support
 
           if output_value.present?
             if (from_field.value == output_value || output_value == '.') \
-              || output_value == '[BLANK IN SPREADSHEET]' && from_field.present?
+              || output_value == '[BLANK]' && from_field.present?
               # they matched or we forgot to fill out the value in our orig-srv
               # so, set to_field with value of from_field to keep it the same.
-              set_by_selector(
-                selector: to_selector, set_value: from_field.value, field_to_set: to_field)
+              #(ed): no, do not fill out anything in "proposed" where the data is blank
+              # set_by_selector(
+              #   selector: to_selector, set_value: from_field.value, field_to_set: to_field)
+            elsif (from_field.value.present? && field_label == :supported_by)
+              # do not overwrite existing value in "Business Owner" field
             elsif output_value.present?
               set_by_selector(
                 selector: to_selector, set_value: output_value, field_to_set: to_field)
@@ -280,9 +292,10 @@ module EmpfinServiceReview::Support
               # set to_field with value of output_value
             end
           else
-            # Did not find a diff in this column in orig srv spreadsheet file, (so echo it forward)
-            set_by_selector(
-              selector: to_selector, set_value: from_field.value, field_to_set: to_field)
+            # # Did not find a diff in this column in orig srv spreadsheet file, (so echo it forward)
+            # (ed: no, do not echo it forward, only fill out data that is missing or differs)
+            # set_by_selector(
+            #   selector: to_selector, set_value: from_field.value, field_to_set: to_field)
           end
         end
 
