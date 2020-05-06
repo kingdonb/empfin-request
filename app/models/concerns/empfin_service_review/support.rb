@@ -112,9 +112,10 @@ module EmpfinServiceReview::Support
       :description                            => 'textarea[id="sys_readonly.cmdb_ci_business_app.short_description"]',
       :application_url                        => 'input[id="sys_original.cmdb_ci_business_app.url"]',
       :support_group_service_offering_manager => 'input[id="cmdb_ci_business_app.support_group_label"]',
-      :supported_by                           => 'input[id="cmdb_ci_business_app.supported_by_label"]',
+      :supported_by                           => 'input[id="cmdb_ci_business_app.u_business_owner_label"]',
       :service_classification                 => 'select[id="sys_readonly.cmdb_ci_business_app.u_service_classification"]',
       :lifecycle_status                       => 'select[id="sys_readonly.cmdb_ci_business_app.install_status"]',
+      :guidance_council                       => 'select[id="sys_readonly.cmdb_ci_business_app.u_guidance_council"]',
       :"primary_support_(person)"             => 'input[id="cmdb_ci_business_app.supported_by_label"]',
       :"secondary_support_(person)"           => 'input[id="cmdb_ci_business_app.u_supported_by_secondary_label"]'
     }
